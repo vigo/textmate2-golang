@@ -92,7 +92,15 @@ module Golang
         will_save_errors.concat(err.split("\n").map { |line| "(golines):" + line })
       end
     end
-
+    
+    unless TM_GOLANG_DISABLE_FIELDALIGNMENT
+      out, err = Linter.autofix_fieldalignment :input => @document
+      unless err.empty?
+        logger.warn "fieldalignment issues fixed: #{err}"
+        @document = out
+      end
+    end
+    
     unless will_save_errors.empty?
       create_storage(will_save_errors)
     end
@@ -134,17 +142,25 @@ module Golang
       end
     end
 
-    unless TM_GOLANG_DISABLE_GOVET
+    unless TM_GOLANG_DISABLE_GOSHADOW
       _, err = Linter.govet_shadow
-      logger.error "govet_shadow: #{err.inspect}"
       unless err.empty?
-        logger.error "govet err, #{err.inspect}"
+        logger.error "govet_shadow err, #{err.inspect}"
         did_save_errors.concat(
           err.split("\n").
             reject { |line| line.index("#") == 0 }.
-            map { |line| "(govet):" + line })
+            map { |line| "(govetshadow):" + line })
       end
     end
+    
+    # unless TM_GOLANG_DISABLE_FIELDALIGNMENT
+    #   out, err = Linter.autofix_fieldalignment
+    #   unless err.empty?
+    #     logger.info "autofix_fieldalignment: err: -- #{err}"
+    #     system()
+    #   end
+    # end
+    
 
     if did_save_errors.size > 0
       logger.error "did_save_errors: #{did_save_errors.inspect}"
@@ -158,6 +174,7 @@ module Golang
       !TM_GOLANG_DISABLE_GOFUMPT,
       !TM_GOLANG_DISABLE_GOLINES,
       !TM_GOLANG_DISABLE_GOVET,
+      !TM_GOLANG_DISABLE_FIELDALIGNMENT,
     ]
     logger.info "enabled_checkers: #{enabled_checkers.inspect}"
     
@@ -168,6 +185,7 @@ module Golang
       success_message << "✅ [gofumpt] - #{TM_GOFUMPT_BINARY_VERSION}" unless TM_GOLANG_DISABLE_GOFUMPT
       success_message << "✅ [golines]" unless TM_GOLANG_DISABLE_GOLINES
       success_message << "✅ [go vet]" unless TM_GOLANG_DISABLE_GOVET
+      success_message << "✅ [fieldalignment]" unless TM_GOLANG_DISABLE_FIELDALIGNMENT
     else
       success_message << "☢️ Heads up! nothing is checked, you have disabled all ☢️"
     end

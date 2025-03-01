@@ -7,6 +7,8 @@
 - Add `golines`
 - Add `go vet`
 - Add `go vet` with `shadow`
+- Add `fieldalignment` autofix
+- Add go tools installer with: option + I
 - Add go to error line with: option + G
 
 **2025-02-28**

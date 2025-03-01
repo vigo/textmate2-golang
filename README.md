@@ -54,41 +54,22 @@ defaults write com.macromates.TextMate NSToolTipsFontSize 24
 
 You need to install go related tools, all are optional:
 
-- `goimports`: `go install golang.org/x/tools/cmd/goimports@latest`
-- `gofumpt`: `go install mvdan.cc/gofumpt@latest`
-- `golines`: `go install github.com/segmentio/golines@latest`
-- `shadow`: `go install golang.org/x/tools/go/analysis/passes/shadow/cmd/shadow@latest`
-
-You can set custom executables for each tool with using `TM_` variables from 
-`TextMate > Settings > Variables`:
-
-    TM_GOIMPORTS_BINARY /path/to/goimports
-    TM_GOFUMPT_BINARY   /path/to/gofumpt
-    TM_GOLINES_BINARY   /path/to/golines
-    TM_GOSHADOW_BINARY   /path/to/shadow
-
-or from `.tm_properties`:
-
-    TM_GOIMPORTS_BINARY=/path/to/goimports
-    TM_GOFUMPT_BINARY=/path/to/gofumpt
-    TM_GOLINES_BINARY=/path/to/golines
-    TM_GOSHADOW_BINARY=/path/to/shadow
-
-or with `defaults` command:
+- `goimports`: Auto adds required imports.
+- `gofumpt`: Shows `gofmt` errors but stricter.
+- `golines`: Breaks long lines even long comments.
+- `shadow`: Checks variable shadowing.
+- `fieldalignment`: Auto fixes struct field alignments.
 
 ```bash
-defaults write com.macromates.TextMate environmentVariables \
-    -array-add "{enabled = 1; value = \"/path/to/goimports\"; name = \"TM_GOIMPORTS_BINARY\"; }"
-
-defaults write com.macromates.TextMate environmentVariables \
-    -array-add "{enabled = 1; value = \"/path/to/gofumpt\"; name = \"TM_GOFUMPT_BINARY\"; }"
-
-defaults write com.macromates.TextMate environmentVariables \
-    -array-add "{enabled = 1; value = \"/path/to/golines\"; name = \"TM_GOLINES_BINARY\"; }"
-
-defaults write com.macromates.TextMate environmentVariables \
-    -array-add "{enabled = 1; value = \"/path/to/shadow\"; name = \"TM_GOSHADOW_BINARY\"; }"
+go install golang.org/x/tools/cmd/goimports@latest
+go install mvdan.cc/gofumpt@latest
+go install github.com/segmentio/golines@latest
+go install golang.org/x/tools/go/analysis/passes/shadow/cmd/shadow@latest
+go install golang.org/x/tools/go/analysis/passes/fieldalignment/cmd/fieldalignment@latest
 ```
+
+You can install tools according to your feature toggles with using
+<kbd>⌥</kbd> + <kbd>I</kbd> (Option + I).
 
 ---
 
@@ -99,13 +80,12 @@ defaults write com.macromates.TextMate environmentVariables \
 - [X] `golines`
 - [X] `go vet`
 - [X] `shadow`
-- [ ] `fieldalignment`
-- [ ] `staticcheck`
+- [X] `fieldalignment`
 - [ ] `golangci-lint`
 - [ ] `gopls` LSP
 - [X] Go to error line
 - [ ] Lots of snippets
-- [ ] Go tools updater script
+- [X] Go tools updater script
 
 ---
 
@@ -122,10 +102,12 @@ defaults write com.macromates.TextMate environmentVariables \
 | `TM_GOLANG_DISABLE_GOLINES` |  | Disable `golines` |
 | `TM_GOLANG_DISABLE_GOVET` |  | Disable `go vet` |
 | `TM_GOLANG_DISABLE_GOSHADOW` |  | Disable `go vet` with `shadow` |
+| `TM_GOLANG_DISABLE_FIELDALIGNMENT` |  | Disable `fieldalignment` |
 | `TM_GOIMPORTS_BINARY` | | Optional |
 | `TM_GOFUMPT_BINARY` | | Optional |
 | `TM_GOLINES_BINARY` | | Optional |
 | `TM_GOSHADOW_BINARY` | | Optional |
+| `TM_GOFIELDALIGNMENT_BINARY` | | Optional |
 | `TM_GOLINES_MAX_LEN` | `"100"` | Maximum line length |
 | `TM_GOLINES_TAB_LEN` | `"4"` | Length of TAB |
 | `TM_GOLINES_SHORTEN_COMMENTS` | | Shorten comments too! |
@@ -134,24 +116,120 @@ To set your TextMate variables, go to `TextMate > Settings > Variables` and
 set the values. Some variables only need to have any value assigned in order
 to be activated. Such as:
 
-    TM_GOLANG_DISABLE           1
-    TM_GOLANG_DISABLE_GOIMPORTS 1
-    TM_GOLANG_DISABLE_GOFUMPT   1
-    TM_GOLANG_DISABLE_GOLINES   1
-    TM_GOLANG_DISABLE_GOVET     1
-    TM_GOLANG_DISABLE_GOSHADOW  1
-    TM_GOIMPORTS_BINARY         /path/to/goimports
-    TM_GOFUMPT_BINARY           /path/to/gofumpt
-    TM_GOLINES_BINARY           /path/to/golines
-    TM_GOSHADOW_BINARY          /path/to/shadow
-    TM_GOLINES_MAX_LEN          120
-    TM_GOLINES_TAB_LEN          2
+    TM_GOLANG_DISABLE                   1
+    TM_GOLANG_DISABLE_GOIMPORTS         1
+    TM_GOLANG_DISABLE_GOFUMPT           1
+    TM_GOLANG_DISABLE_GOLINES           1
+    TM_GOLANG_DISABLE_GOVET             1
+    TM_GOLANG_DISABLE_GOSHADOW          1
+    TM_GOLANG_DISABLE_FIELDALIGNMENT    1
+    TM_GOIMPORTS_BINARY                 /path/to/goimports
+    TM_GOFUMPT_BINARY                   /path/to/gofumpt
+    TM_GOLINES_BINARY                   /path/to/golines
+    TM_GOSHADOW_BINARY                  /path/to/shadow
+    TM_GOFIELDALIGNMENT_BINARY          /path/to/fieldalignment
+    TM_GOLINES_MAX_LEN                  120
+    TM_GOLINES_TAB_LEN                  2
+    TM_GOLINES_SHORTEN_COMMENTS         1
+
+To disable this bundle, set `TM_GOLANG_DISABLE` from `TextMate > Settings > Variables` 
+or from `.tm_properties` (local or global)
+
+    TM_GOLANG_DISABLE=1
+
+To set/toggle features from `.tm_properties`:
+
+    # disable feature(s)
+    TM_GOLANG_DISABLE_GOIMPORTS=1
+    TM_GOLANG_DISABLE_GOFUMPT=1
+    TM_GOLANG_DISABLE_GOLINES=1
+    TM_GOLANG_DISABLE_GOVET=1
+    TM_GOLANG_DISABLE_GOSHADOW=1
+    TM_GOLANG_DISABLE_FIELDALIGNMENT=1
+    
+    # custom params
+    TM_GOLINES_MAX_LEN=120
+    TM_GOLINES_TAB_LEN=2
+    TM_GOLINES_SHORTEN_COMMENTS=1
+    
+    # if you have custom binaries to set
+    TM_GOIMPORTS_BINARY=/path/to/goimports
+    TM_GOFUMPT_BINARY=/path/to/gofumpt
+    TM_GOLINES_BINARY=/path/to/golines
+    TM_GOSHADOW_BINARY=/path/to/shadow
+    TM_GOFIELDALIGNMENT_BINARY=/path/to/fieldalignment
+
+or with `defaults` command:
+
+```bash
+# disable bundle! nothing will work...
+defaults write com.macromates.TextMate environmentVariables \
+    -array-add "{enabled = 1; value = \"1\"; name = \"TM_GOLANG_DISABLE\"; }"
+
+# disable goimports
+defaults write com.macromates.TextMate environmentVariables \
+    -array-add "{enabled = 1; value = \"1\"; name = \"TM_GOLANG_DISABLE_GOIMPORTS\"; }"
+
+# disable gofumpt
+defaults write com.macromates.TextMate environmentVariables \
+    -array-add "{enabled = 1; value = \"1\"; name = \"TM_GOLANG_DISABLE_GOFUMPT\"; }"
+
+# disable golines
+defaults write com.macromates.TextMate environmentVariables \
+    -array-add "{enabled = 1; value = \"1\"; name = \"TM_GOLANG_DISABLE_GOLINES\"; }"
+
+# disable govet
+defaults write com.macromates.TextMate environmentVariables \
+    -array-add "{enabled = 1; value = \"1\"; name = \"TM_GOLANG_DISABLE_GOVET\"; }"
+
+# disable shadow
+defaults write com.macromates.TextMate environmentVariables \
+    -array-add "{enabled = 1; value = \"1\"; name = \"TM_GOLANG_DISABLE_GOSHADOW\"; }"
+
+# disable fieldalignment
+defaults write com.macromates.TextMate environmentVariables \
+    -array-add "{enabled = 1; value = \"1\"; name = \"TM_GOLANG_DISABLE_FIELDALIGNMENT\"; }"
+
+# set golines max line length
+defaults write com.macromates.TextMate environmentVariables \
+    -array-add "{enabled = 1; value = \"120\"; name = \"TM_GOLINES_MAX_LEN\"; }"
+
+# set golines tab length
+defaults write com.macromates.TextMate environmentVariables \
+    -array-add "{enabled = 1; value = \"2\"; name = \"TM_GOLINES_TAB_LEN\"; }"
+
+# enable golines for comments too!
+defaults write com.macromates.TextMate environmentVariables \
+    -array-add "{enabled = 1; value = \"1\"; name = \"TM_GOLINES_SHORTEN_COMMENTS\"; }"
+
+# set custom path for goimports
+defaults write com.macromates.TextMate environmentVariables \
+    -array-add "{enabled = 1; value = \"/path/to/goimports\"; name = \"TM_GOIMPORTS_BINARY\"; }"
+
+# set custom path for gofumpt
+defaults write com.macromates.TextMate environmentVariables \
+    -array-add "{enabled = 1; value = \"/path/to/gofumpt\"; name = \"TM_GOFUMPT_BINARY\"; }"
+
+# set custom path for golines
+defaults write com.macromates.TextMate environmentVariables \
+    -array-add "{enabled = 1; value = \"/path/to/golines\"; name = \"TM_GOLINES_BINARY\"; }"
+
+# set custom path for shadow
+defaults write com.macromates.TextMate environmentVariables \
+    -array-add "{enabled = 1; value = \"/path/to/shadow\"; name = \"TM_GOSHADOW_BINARY\"; }"
+
+# set custom path for fieldalignment
+defaults write com.macromates.TextMate environmentVariables \
+    -array-add "{enabled = 1; value = \"/path/to/fieldalignment\"; name = \"TM_GOFIELDALIGNMENT_BINARY\"; }"
+```
+
 ---
 
 ## Hot Keys and Snippets
 
 | Hot Keys and TAB Completions | Description |
 |:-----|:-----|
+| <kbd>⌥</kbd> + <kbd>I</kbd> | Install go tools. <small>(option + I)</small> |
 | <kbd>⌥</kbd> + <kbd>G</kbd> | Go to error marked line/column. <small>(option + G)</small> |
 | <kbd>⌥</kbd> + <kbd>R</kbd> | Fix imports, formatting w/o saving file. <small>(option + R)</small> |
 

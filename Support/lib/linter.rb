@@ -1,3 +1,4 @@
+require 'tempfile'
 require ENV['TM_SUPPORT_PATH'] + '/lib/tm/process'
 
 require ENV['TM_BUNDLE_SUPPORT'] + '/lib/constants'
@@ -59,6 +60,23 @@ module Linter
     return TextMate::Process.run(*cmd)
   end
   
+  def autofix_fieldalignment(options={})
+    input = options[:input]
+    temp_file = Tempfile.new(['fieldalignment', '.go'])
+    temp_file.write(input)
+    temp_file.close
+    
+    fixed_code = input
+
+    _, err = TextMate::Process.run(TM_GOFIELDALIGNMENT_BINARY, '-fix', temp_file.path)
+    unless err.empty?
+      fixed_code = File.read(temp_file.path)
+    end
+    temp_file.unlink
+    
+    return fixed_code, err
+  end
+  
   def get_lookup()
     go_mod = "#{TM_PROJECT_DIRECTORY}/go.mod"
     go_work = "#{TM_PROJECT_DIRECTORY}/go.work"
@@ -85,5 +103,11 @@ module Linter
     args.concat(['vet', '-vettool', TM_GOSHADOW_BINARY, get_lookup])
     return TextMate::Process.run(ENV['TM_GO'], args, :chdir => TM_PROJECT_DIRECTORY)
   end
+
+  # def autofix_fieldalignment(options={})
+  #   args = options[:args] || []
+  #   args.concat(['-fix', TM_FILEPATH])
+  #   return TextMate::Process.run(TM_GOFIELDALIGNMENT_BINARY, args, :chdir => TM_PROJECT_DIRECTORY)
+  # end
 
 end

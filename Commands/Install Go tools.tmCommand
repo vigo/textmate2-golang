@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>beforeRunningCommand</key>
+	<string>nop</string>
+	<key>command</key>
+	<string>if [[ "${TM_GOLANG_DISABLE+x}" ]]; then
+    echo "bundle is disabled, exitting..."
+    exit
+fi
+
+installed_count=0
+
+if [[ -z "${TM_GOLANG_DISABLE_GOIMPORTS+x}" ]]; then
+    go install golang.org/x/tools/cmd/goimports@latest &amp;&amp;
+    echo "✅ goimports" &amp;&amp;
+    installed_count=$(( installed_count+1 ))
+fi
+
+if [[ -z "${TM_GOLANG_DISABLE_GOFUMPT+x}" ]]; then
+    go install mvdan.cc/gofumpt@latest &amp;&amp;
+    echo "✅ gofumpt" &amp;&amp;
+    installed_count=$(( installed_count+1 ))
+fi
+
+if [[ -z "${TM_GOLANG_DISABLE_GOLINES+x}" ]]; then
+    go install github.com/segmentio/golines@latest &amp;&amp;
+    echo "✅ golines" &amp;&amp;
+    installed_count=$(( installed_count+1 ))
+fi
+
+if [[ -z "${TM_GOLANG_DISABLE_GOSHADOW+x}" ]]; then
+    go install golang.org/x/tools/go/analysis/passes/shadow/cmd/shadow@latest &amp;&amp;
+    echo "✅ shadow" &amp;&amp;
+    installed_count=$(( installed_count+1 ))
+fi
+
+if [[ -z "${TM_GOLANG_DISABLE_FIELDALIGNMENT+x}" ]]; then
+    go install golang.org/x/tools/go/analysis/passes/fieldalignment/cmd/fieldalignment@latest &amp;&amp;
+    echo "✅ fieldalignment" &amp;&amp;
+    installed_count=$(( installed_count+1 ))
+fi
+
+if [[ installed_count == 0 ]]; then
+    echo "nothing is installed"
+else
+    echo
+    echo "installations/updates complete"
+fi
+</string>
+	<key>input</key>
+	<string>none</string>
+	<key>inputFormat</key>
+	<string>text</string>
+	<key>keyEquivalent</key>
+	<string>~i</string>
+	<key>name</key>
+	<string>Install Go tools</string>
+	<key>outputCaret</key>
+	<string>interpolateByLine</string>
+	<key>outputFormat</key>
+	<string>text</string>
+	<key>outputLocation</key>
+	<string>toolTip</string>
+	<key>scope</key>
+	<string>source.go</string>
+	<key>uuid</key>
+	<string>653A1CC6-38A3-4726-A2ED-BD5CD3BDA0B8</string>
+	<key>version</key>
+	<integer>2</integer>
+</dict>
+</plist>
