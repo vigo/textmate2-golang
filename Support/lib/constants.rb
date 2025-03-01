@@ -36,7 +36,7 @@ module Constants
   TM_GOFIELDALIGNMENT_BINARY = ENV['TM_GOFIELDALIGNMENT_BINARY'] || `command -v fieldalignment`.chomp
   
   TM_GOLANGCI_LINTER_BINARY = ENV['TM_GOLANGCI_LINTER_BINARY'] || `command -v golangci-lint`.chomp
-  TM_GOLANGCI_LINTER_BINARY_VERSION = `#{TM_GOLANGCI_LINTER_BINARY} version | grep -oE ' [0-9]+\.[0-9]+\.[0-9]+ ' | xargs`.chomp
+  TM_GOLANGCI_LINTER_BINARY_VERSION = `#{TM_GOLANGCI_LINTER_BINARY} version | /usr/bin/grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | xargs | cut -d' ' -f1`.chomp
 
   TM_GO_BINARY_VERSION = `#{ENV['TM_GO']} version | grep -oE 'go[0-9]+\.[0-9]+\.[0-9]+'`.chomp
 end

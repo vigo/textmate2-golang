@@ -188,7 +188,7 @@ module Golang
       success_message << "✅ [golines]" unless TM_GOLANG_DISABLE_GOLINES
       success_message << "✅ [go vet]" unless TM_GOLANG_DISABLE_GOVET
       success_message << "✅ [fieldalignment]" unless TM_GOLANG_DISABLE_FIELDALIGNMENT
-      success_message << "✅ [golangci-lint] - " unless TM_GOLANG_DISABLE_GOLANGCI_LINTER
+      success_message << "✅ [golangci-lint] - #{TM_GOLANGCI_LINTER_BINARY_VERSION}" unless TM_GOLANG_DISABLE_GOLANGCI_LINTER
       success_message << "ℹ️ [go version] - #{TM_GO_BINARY_VERSION}"
     else
       success_message << "☢️ Heads up! nothing is checked, you have disabled all ☢️"
