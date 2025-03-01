@@ -53,18 +53,37 @@ module Golang
     
     logger.info "will save"
     
+    will_save_errors = []
+    
     unless ENV['TM_GOLANG_DISABLE_GOIMPORTS']
       out, err = Linter.goimports :input => @document
-      logger.info "out: #{out.inspect} -- err: #{err.inspect}"
+      # logger.info "out: #{out.inspect} -- err: #{err.inspect}"
 
       if err.empty?
         @document = out
       else
-        logger.error "goimports err, #{err.inspect}" unless err.empty?
-        create_storage([err])
+        logger.error "goimports err, #{err.inspect}"
+        will_save_errors.concat(err.split("\n").map { |line| "(goimports):" + line })
+        # logger.error "will_save_errors, #{will_save_errors.inspect}"
+        # will_save_errors << "(goimports):#{err}"
       end
     end
     
+    unless will_save_errors.empty?
+      create_storage(will_save_errors)
+    end
+    
+    # unless ENV['TM_GOLANG_DISABLE_GOFUMPT']
+    #   out, err = Linter.gofumpt :input => @document
+    #   logger.info "out: #{out.inspect} -- err: #{err.inspect}"
+    #
+    #   if err.empty?
+    #     @document = out
+    #   else
+    #     logger.error "goimports err, #{err.inspect}" unless err.empty?
+    #     create_storage([err])
+    #   end
+    # end
     
     print @document
   end
@@ -78,11 +97,20 @@ module Golang
     exit_discard if document_empty?
     exit_discard if document_has_first_line_comment?
 
-    storage_err = get_storage
-    if storage_err
-      logger.error "storage_err: #{storage_err.inspect}"
-      exit_boxify_tool_tip(storage_err)
-    end
+    storage_errs = get_storage
+    if storage_errs
+      logger.error "storage_err: #{storage_errs.inspect}"
 
+      errors = organize_errors(storage_errs)
+      set_markers("error", errors)
+      exit_boxify_tool_tip(boxify_errors(errors))
+    end
+    
+    success_message = []
+    success_message << "🎉 congrats! \"#{TM_FILENAME}\" has zero errors 👍\n"
+    success_message << "✅ [goimports]" unless ENV['TM_GOLANG_DISABLE_GOIMPORTS']
+    
+    exit_boxify_tool_tip(success_message.join("\n"))
   end
+  
 end

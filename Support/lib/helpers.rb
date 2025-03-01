@@ -119,5 +119,38 @@ module Helpers
     return sprintf("%0#{padding}d", line_number)
   end
   
+  def boxify_errors(errors)
+    messages = []
+    messages << "⚠️ Found #{errors.size} #{pluralize(errors.size, "error")}! ⚠️\n"
+    messages << "🔍 Use Option ( ⌥ ) + G to jump error line!"
+    
+    errors.each do |error_line, errs|
+      errs.sort_by{|err| err[:line_number]}.each do |err|
+        messages << "  - #{err[:line_number]} -> #{err[:message]}"
+      end
+    end
+    
+    messages.join("\n")
+  end
   
+  def organize_errors(errors)
+    errs = {}
+
+    errors.each do |error|
+      if error =~ /^\((.*)\):(.*):(\d+):(\d+):\s?(.*)$/
+        error_type, file, line_number, column_number, message = $1, $2, $3.to_i, $4.to_i, $5
+        errs[line_number] = [] unless errs.has_key?(line_number)
+
+        err = {
+          :line_number => line_number,
+          :column_number => column_number,
+          :type => error_type,
+          :message => "[#{error_type}]: #{message}",
+        }
+        errs[line_number] << err
+      end
+    end
+    
+    errs
+  end
 end

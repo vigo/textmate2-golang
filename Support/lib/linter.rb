@@ -20,10 +20,12 @@ module Linter
     cmd = `command -v goimports`.chomp
 
     if input.nil?
-      return TextMate::Process.run(cmd, args, TM_FILEPATH)
+      out, err = TextMate::Process.run(cmd, args, TM_FILEPATH)
     else
-      return TextMate::Process.run(cmd, args, :input => input)
+      out, err = TextMate::Process.run(cmd, args, :input => input)
     end
+    
+    return out, err
   end
   
 end
