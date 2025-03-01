@@ -1,4 +1,10 @@
-![Version](https://img.shields.io/badge/version-0.0.0-orange.svg)
+![Version](https://img.shields.io/badge/version-0.0.0-orange.svg?style=for-the-badge)
+![TextMate](https://img.shields.io/badge/textmate-2.0.23-green.svg?style=for-the-badge)
+![macOS](https://img.shields.io/badge/macos-sonoma-blue.svg?style=for-the-badge)
+![macOS](https://img.shields.io/badge/macos-sequoia-blue.svg?style=for-the-badge)
+![M3](https://img.shields.io/badge/apple-M3-black.svg?style=for-the-badge)
+![M4](https://img.shields.io/badge/apple-M4-black.svg?style=for-the-badge)
+![Powered by Rake](https://img.shields.io/badge/powered_by-rake-blue?logo=ruby&style=for-the-badge)
 
 # TextMate2 Golang Bundle
 
@@ -275,11 +281,31 @@ defaults write com.macromates.TextMate environmentVariables \
 
 ## Hot Keys and Snippets
 
-| Hot Keys and TAB Completions | Description |
-|:-----|:-----|
+### Hot Keys
+
+| Hot Keys | Description |
+|:---------|:------------|
 | <kbd>⌥</kbd> + <kbd>I</kbd> | Install go tools. <small>(option + I)</small> |
 | <kbd>⌥</kbd> + <kbd>G</kbd> | Go to error marked line/column. <small>(option + G)</small> |
 | <kbd>⌥</kbd> + <kbd>R</kbd> | Fix imports, formatting w/o saving file. <small>(option + R)</small> |
+
+### Snippets
+
+| <kbd>⇥</kbd> Triggers | Description |
+|:----------------|:------------|
+| `temp` + <kbd>⇥</kbd> | Create `main` package template |
+| `fps` + <kbd>⇥</kbd> | fmt.Printf, fmt.Scanf, fmt.Sprintf |
+| `prl` + <kbd>⇥</kbd> | fmt.Println |
+| `prf` + <kbd>⇥</kbd> | fmt.Printf helpers |
+| `spr` + <kbd>⇥</kbd> | fmt.Sprintf helpers |
+| `fpr` + <kbd>⇥</kbd> | fmt.Fprintf |
+| `erf` + <kbd>⇥</kbd> | fmt.Errorf |
+| `log` + <kbd>⇥</kbd> | log helpers |
+| `ctp` + <kbd>⇥</kbd> | Compile time proof |
+| `ifer` + <kbd>⇥</kbd> | `if err:= ...; err != nil` |
+| `vok` + <kbd>⇥</kbd> | `val, ok := ...; ok {` |
+| `st` + <kbd>⇥</kbd> | `struct` helpers |
+| `for` + <kbd>⇥</kbd> | `for` helpers |
 
 ---
 

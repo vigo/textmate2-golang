@@ -1,5 +1,9 @@
 # Change Log
 
+**2025-03-02**
+
+- Add some snippets
+
 **2025-03-01**
 
 - Add `goimports`

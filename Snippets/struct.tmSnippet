@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>content</key>
+	<string>// ${1} represents ...
+type ${1:name} struct {
+    $0
+}</string>
+	<key>name</key>
+	<string>struct</string>
+	<key>scope</key>
+	<string>source.go</string>
+	<key>tabTrigger</key>
+	<string>st</string>
+	<key>uuid</key>
+	<string>0FB05EEA-6330-405E-80D5-E9D239A9E16B</string>
+</dict>
+</plist>

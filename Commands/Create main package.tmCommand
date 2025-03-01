@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>beforeRunningCommand</key>
+	<string>nop</string>
+	<key>command</key>
+	<string>#!/usr/bin/env ruby18 -wKU
+
+require "time"
+
+TM_DATE = Time.now.strftime('%Y-%m-%d')
+TM_YEAR = Time.now.strftime('%Y')
+TM_FULLNAME = ENV['TM_FULLNAME'] || 'Your Name Here...'
+TM_ORGANIZATION = ENV['TM_ORGANIZATION'] || 'Your Organization Here...'
+
+GOLANG_VERSION = `#{ENV['TM_GO']} version`.chomp
+
+puts(&lt;&lt;-TEMP)
+/*
+Package main implements ....
+
+	Build with: #{GOLANG_VERSION}
+	Created by #{TM_FULLNAME} on #{TM_DATE}.
+	Copyright (c) #{TM_YEAR} #{TM_ORGANIZATION}. All rights reserved.
+
+*/
+package main
+
+import "fmt"
+
+func main() {
+	fmt.Println("Hello World")
+}
+TEMP
+</string>
+	<key>input</key>
+	<string>none</string>
+	<key>inputFormat</key>
+	<string>text</string>
+	<key>name</key>
+	<string>Create main package</string>
+	<key>outputCaret</key>
+	<string>interpolateByLine</string>
+	<key>outputFormat</key>
+	<string>text</string>
+	<key>outputLocation</key>
+	<string>atCaret</string>
+	<key>scope</key>
+	<string>source.go</string>
+	<key>tabTrigger</key>
+	<string>temp</string>
+	<key>uuid</key>
+	<string>BDEA92FD-8445-4B49-8128-ED7BD1182CBE</string>
+	<key>version</key>
+	<integer>2</integer>
+</dict>
+</plist>

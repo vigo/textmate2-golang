@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>content</key>
+	<string>log.Printf(${1:"%${2|T,v,s,+v,#v,t,b,c,d,o,q,x,X,U,f,p|}\n", ${3:variable}})$0</string>
+	<key>name</key>
+	<string>log.Printf</string>
+	<key>scope</key>
+	<string>source.go</string>
+	<key>tabTrigger</key>
+	<string>log</string>
+	<key>uuid</key>
+	<string>782FFDEE-77C6-4084-B49B-347255B87282</string>
+</dict>
+</plist>

@@ -23,7 +23,113 @@
             <string>------------------------------------</string>
             <string>653A1CC6-38A3-4726-A2ED-BD5CD3BDA0B8</string>
             <string>------------------------------------</string>
+            <string>526D18DE-0954-4AD2-A2AD-29262A940096</string>
+            <string>------------------------------------</string>
+            <string>BD0CF35F-3CE1-453B-B777-B03C0C5653F3</string>
+            <string>F48F8282-CE8C-4D83-BC14-EC2F542F2A65</string>
+            <string>------------------------------------</string>
+            <string>8D6AEC74-D174-45F0-9949-3DD267251C69</string>
+            <string>------------------------------------</string>
+            <string>62AB5D20-E68E-4CF9-9FEC-8C70DDE34EB9</string>
+            <string>------------------------------------</string>
+            <string>4CBE3B56-9C2A-4105-B2C4-DD98465A3F6B</string>
+            <string>------------------------------------</string>
         </array>
+        
+        <key>submenus</key>
+        <dict>
+            <key>526D18DE-0954-4AD2-A2AD-29262A940096</key>
+            <dict>
+                <key>items</key>
+                <array>
+                    <string>BDEA92FD-8445-4B49-8128-ED7BD1182CBE</string>
+                </array>
+                <key>name</key>
+                <string>Templates</string>
+            </dict>
+            
+            <key>BD0CF35F-3CE1-453B-B777-B03C0C5653F3</key>
+            <dict>
+                <key>items</key>
+                <array>
+                    <string>243E025A-D385-41D9-9900-13C889FA35CB</string>
+                    <string>------------------------------------</string>
+                    <string>DC65C8E9-EB78-45AE-9A64-7ED88A967E8F</string>
+                    <string>------------------------------------</string>
+                    <string>D1157D83-1275-41C7-8930-AFC23F51679A</string>
+                    <string>4679DDAA-AD5A-4659-847C-7B6702B5241B</string>
+                    <string>------------------------------------</string>
+                    <string>48941807-F510-471C-A50A-16370A7DB324</string>
+                    <string>B23B7868-577C-42D5-AF4C-DEFC8BB22314</string>
+                    <string>------------------------------------</string>
+                    <string>E68AF0C0-D591-4FE6-87FD-F9F251C6B6E7</string>
+                    <string>------------------------------------</string>
+                    <string>027F01D5-18B0-402B-8941-AFE8A52E9CF3</string>
+                    <string>------------------------------------</string>
+                </array>
+                <key>name</key>
+                <string>fmt Helpers</string>
+            </dict>
+            
+            <key>F48F8282-CE8C-4D83-BC14-EC2F542F2A65</key>
+            <dict>
+                <key>items</key>
+                <array>
+                    <string>782FFDEE-77C6-4084-B49B-347255B87282</string>
+                    <string>------------------------------------</string>
+                    <string>7E0DBC16-1FAB-4F8B-BA35-9DD6C998C6A4</string>
+                    <string>7993B7D2-7F60-4AF8-BBD7-AC661A3C65C6</string>
+                    <string>B52E92C1-646E-49D8-A9AE-5D615EA52D1F</string>
+                    <string>------------------------------------</string>
+                </array>
+                <key>name</key>
+                <string>log Helpers</string>
+            </dict>
+
+            <key>8D6AEC74-D174-45F0-9949-3DD267251C69</key>
+            <dict>
+                <key>items</key>
+                <array>
+                    <string>CA9303CF-0C28-4111-B7FD-7EBCE4E562BE</string>
+                </array>
+                <key>name</key>
+                <string>Other Helpers</string>
+            </dict>
+
+            <key>62AB5D20-E68E-4CF9-9FEC-8C70DDE34EB9</key>
+            <dict>
+                <key>items</key>
+                <array>
+                    <string>CBAEF512-D99F-41CC-B11A-FCDF64188DBE</string>
+                    <string>F7762B9A-1D8E-4FD3-B6BA-7968F764BA19</string>
+                    <string>------------------------------------</string>
+                    <string>0FB05EEA-6330-405E-80D5-E9D239A9E16B</string>
+                    <string>33986BF1-0C7A-420D-AC5E-0157494CCD9D</string>
+                    <string>------------------------------------</string>
+                </array>
+                <key>name</key>
+                <string>Common Helpers</string>
+            </dict>
+
+            <key>4CBE3B56-9C2A-4105-B2C4-DD98465A3F6B</key>
+            <dict>
+                <key>items</key>
+                <array>
+                    <string>0D4E9DB6-2876-4C02-B52E-AA3655D8CB03</string>
+                    <string>51A1E376-9E98-43FB-861C-F45C626B6525</string>
+                    <string>2AC43838-FE5C-45C3-9509-C13C1EF615D8</string>
+                    <string>------------------------------------</string>
+                    <string>5C4839A1-D52E-4AA3-BFFD-60B82ACAB0A3</string>
+                    <string>C25404B0-92F1-4010-A4E6-E3BEB8B33AFD</string>
+                    <string>------------------------------------</string>
+                </array>
+                <key>name</key>
+                <string>Iteration Helpers</string>
+            </dict>
+
+        </dict>
+
+
     </dict>
 </dict>
 </plist>

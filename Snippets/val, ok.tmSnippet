@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>content</key>
+	<string>if ${1:value}, ok := ${2:statement}; ok {
+    $0
+}
+</string>
+	<key>name</key>
+	<string>val, ok</string>
+	<key>scope</key>
+	<string>source.go</string>
+	<key>tabTrigger</key>
+	<string>vok</string>
+	<key>uuid</key>
+	<string>F7762B9A-1D8E-4FD3-B6BA-7968F764BA19</string>
+</dict>
+</plist>

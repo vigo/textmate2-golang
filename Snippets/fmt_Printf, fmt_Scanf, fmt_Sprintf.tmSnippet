@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>content</key>
+	<string>fmt.${1|Printf,Scanf,Sprintf|}(${2:"%${3|T,v,s,+v,#v,t,b,c,d,o,q,x,X,U,f,p|}", $0})</string>
+	<key>name</key>
+	<string>fmt.Printf, fmt.Scanf, fmt.Sprintf</string>
+	<key>scope</key>
+	<string>source.go</string>
+	<key>tabTrigger</key>
+	<string>fps</string>
+	<key>uuid</key>
+	<string>243E025A-D385-41D9-9900-13C889FA35CB</string>
+</dict>
+</plist>
