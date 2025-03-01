@@ -237,7 +237,37 @@ defaults write com.macromates.TextMate environmentVariables \
 
 ## Bug Report
 
-@wip
+Please set/enable the logger via setting `ENABLE_LOGGING=1`. Logs are written to
+the `/tmp/textmate-golang.log` file. You can `tail` while running via;
+`tail -f /tmp/textmate-golang.log` in another Terminal tab. You can see
+live what’s going on. Please provide the log information for bug reporting.
+
+After you fix the source code (next run) bundle removes those files if there
+is no error. According to you bug report, you can `tail` or copy/paste the
+contents of error file to issue.
+
+Also, while running bundle script (*which is TextMate’s default ruby 1.8.7*),
+if error occurs, TextMate pops up an alert window. Please add that screen shot
+or try to copy error text from modal dialog.
+
+Logger output should look like this:
+
+    [2025-03-01 17:03:59][TM-GOLANG][WARN][storage.rb->get_storage]: storage.get not found for 0F742219-9517-454F-93FE-9EEE602B426B (/tmp/textmate-golang-0F742219-9517-454F-93FE-9EEE602B426B.error)
+    [2025-03-01 17:03:59][TM-GOLANG][INFO][golang.rb->run_document_did_save]: did save
+    [2025-03-01 17:03:59][TM-GOLANG][INFO][golang.rb->run_document_did_save]: enabled_checkers: [true, true, true, true, true]
+    [2025-03-01 17:04:33][TM-GOLANG][WARN][storage.rb->destroy_storage]: storage.destroy not found for E2A58F4B-9845-4BD9-A231-CCC60D63D87B - (/tmp/textmate-golang-E2A58F4B-9845-4BD9-A231-CCC60D63D87B.error)
+    [2025-03-01 17:04:33][TM-GOLANG][WARN][storage.rb->destroy_storage]: storage.destroy not found for E2A58F4B-9845-4BD9-A231-CCC60D63D87B - (/tmp/textmate-golang-E2A58F4B-9845-4BD9-A231-CCC60D63D87B.goto)
+    [2025-03-01 17:04:33][TM-GOLANG][INFO][golang.rb->run_document_will_save]: will save
+    [2025-03-01 17:04:33][TM-GOLANG][WARN][storage.rb->get_storage]: storage.get not found for E2A58F4B-9845-4BD9-A231-CCC60D63D87B (/tmp/textmate-golang-E2A58F4B-9845-4BD9-A231-CCC60D63D87B.error)
+    [2025-03-01 17:04:33][TM-GOLANG][INFO][golang.rb->run_document_did_save]: did save
+    [2025-03-01 17:04:33][TM-GOLANG][INFO][golang.rb->run_document_did_save]: enabled_checkers: [true, true, true, true, true]
+    [2025-03-01 17:07:18][TM-GOLANG][WARN][storage.rb->destroy_storage]: storage.destroy not found for 77744A4B-FF5A-4226-B979-094B86F4C74D - (/tmp/textmate-golang-77744A4B-FF5A-4226-B979-094B86F4C74D.error)
+
+Keep in mind that when logging is enabled, there may be some performance
+degradation due to *file I/O* operations.
+
+If you are still using TextMate like me, I eagerly await your **comments**, **bug
+reports**, and **feature requests**.
 
 ---
 
