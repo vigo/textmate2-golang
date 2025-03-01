@@ -60,6 +60,11 @@ module Golang
     
     will_save_errors = []
     
+    unless TM_GOLANG_DISABLE_GOFUMPT
+      out, _ = Linter.gofumpt :input => @document
+      @document = out
+    end
+
     unless TM_GOLANG_DISABLE_GOIMPORTS
       out, err = Linter.goimports :input => @document
 
@@ -71,11 +76,17 @@ module Golang
       end
     end
 
-    unless TM_GOLANG_DISABLE_GOFUMPT
-      out, _ = Linter.gofumpt :input => @document
-      @document = out
+    unless TM_GOLANG_DISABLE_GOLINES
+      out, err = Linter.golines :input => @document
+      logger.warn "golines, out: #{out} -- err: #{err}"
+      
+      if err.empty?
+        @document = out
+      else
+        logger.error "golines err, #{err.inspect}"
+        will_save_errors.concat(err.split("\n").map { |line| "(golines):" + line })
+      end
     end
-
 
     unless will_save_errors.empty?
       create_storage(will_save_errors)
@@ -107,8 +118,8 @@ module Golang
     enabled_checkers = [
       !TM_GOLANG_DISABLE_GOIMPORTS,
       !TM_GOLANG_DISABLE_GOFUMPT,
+      !TM_GOLANG_DISABLE_GOLINES,
     ]
-    
     logger.info "enabled_checkers: #{enabled_checkers.inspect}"
     
     success_message = []
@@ -116,6 +127,7 @@ module Golang
       success_message << "🎉 congrats! \"#{TM_FILENAME}\" has zero errors 👍\n"
       success_message << "✅ [goimports]" unless TM_GOLANG_DISABLE_GOIMPORTS
       success_message << "✅ [gofumpt] - #{TM_GOFUMPT_BINARY_VERSION}" unless TM_GOLANG_DISABLE_GOFUMPT
+      success_message << "✅ [golines]" unless TM_GOLANG_DISABLE_GOLINES
     else
       success_message << "☢️ Heads up! nothing is checked, you have disabled all ☢️"
     end

@@ -56,17 +56,20 @@ You need to install go related tools, all are optional:
 
 - `goimports`: `go install golang.org/x/tools/cmd/goimports@latest`
 - `gofumpt`: `go install mvdan.cc/gofumpt@latest`
+- `golines`: `go install github.com/segmentio/golines@latest`
 
 You can set custom executables for each tool with using `TM_` variables from 
 `TextMate > Settings > Variables`:
 
     TM_GOIMPORTS_BINARY /path/to/goimports
     TM_GOFUMPT_BINARY   /path/to/gofumpt
+    TM_GOLINES_BINARY   /path/to/golines
 
 or from `.tm_properties`:
 
     TM_GOIMPORTS_BINARY=/path/to/goimports
     TM_GOFUMPT_BINARY=/path/to/gofumpt
+    TM_GOLINES_BINARY=/path/to/golines
 
 or with `defaults` command:
 
@@ -76,6 +79,9 @@ defaults write com.macromates.TextMate environmentVariables \
 
 defaults write com.macromates.TextMate environmentVariables \
     -array-add "{enabled = 1; value = \"/path/to/gofumpt\"; name = \"TM_GOFUMPT_BINARY\"; }"
+
+defaults write com.macromates.TextMate environmentVariables \
+    -array-add "{enabled = 1; value = \"/path/to/golines\"; name = \"TM_GOLINES_BINARY\"; }"
 ```
 
 ---
@@ -84,7 +90,7 @@ defaults write com.macromates.TextMate environmentVariables \
 
 - [X] `goimports`
 - [X] `gofumpt`
-- [ ] `golines`
+- [X] `golines`
 - [ ] `shadow`
 - [ ] `staticcheck`
 - [ ] `golangci-lint`
@@ -105,8 +111,13 @@ defaults write com.macromates.TextMate environmentVariables \
 | `TM_GOLANG_DISABLE` |  | Disable bundle |
 | `TM_GOLANG_DISABLE_GOIMPORTS` |  | Disable `goimports` |
 | `TM_GOLANG_DISABLE_GOFUMPT` |  | Disable `gofumpt` |
+| `TM_GOLANG_DISABLE_GOLINES` |  | Disable `golines` |
 | `TM_GOIMPORTS_BINARY` | | Optional |
 | `TM_GOFUMPT_BINARY` | | Optional |
+| `TM_GOLINES_BINARY` | | Optional |
+| `TM_GOLINES_MAX_LEN` | `"100"` | Maximum line length |
+| `TM_GOLINES_TAB_LEN` | `"4"` | Length of TAB |
+| `TM_GOLINES_SHORTEN_COMMENTS` | | Shorten comments too! |
 
 To set your TextMate variables, go to `TextMate > Settings > Variables` and
 set the values. Some variables only need to have any value assigned in order
@@ -115,9 +126,12 @@ to be activated. Such as:
     TM_GOLANG_DISABLE           1
     TM_GOLANG_DISABLE_GOIMPORTS 1
     TM_GOLANG_DISABLE_GOFUMPT   1
+    TM_GOLANG_DISABLE_GOLINES   1
     TM_GOIMPORTS_BINARY         /path/to/goimports
     TM_GOFUMPT_BINARY           /path/to/gofumpt
-
+    TM_GOLINES_BINARY           /path/to/golines
+    TM_GOLINES_MAX_LEN          120
+    TM_GOLINES_TAB_LEN          2
 ---
 
 ## Hot Keys and Snippets
@@ -125,6 +139,7 @@ to be activated. Such as:
 | Hot Keys and TAB Completions | Description |
 |:-----|:-----|
 | <kbd>⌥</kbd> + <kbd>G</kbd> | Go to error marked line/column. <small>(option + G)</small> |
+| <kbd>⌥</kbd> + <kbd>R</kbd> | Fix imports, formatting w/o saving file. <small>(option + R)</small> |
 
 ---
 

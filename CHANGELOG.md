@@ -4,6 +4,7 @@
 
 - Add `goimports`
 - Add `gofumpt`
+- Add `golines`
 - Add go to error line with: option + G
 
 **2025-02-28**

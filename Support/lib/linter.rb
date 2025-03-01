@@ -16,28 +16,47 @@ module Linter
   
   def goimports(options={})
     input = options[:input]
-    args = options[:args]
+    args = options[:args] || []
+    cmd = [TM_GOIMPORTS_BINARY, args]
 
     if input.nil?
-      out, err = TextMate::Process.run(TM_GOIMPORTS_BINARY, args, TM_FILEPATH)
+      cmd << TM_FILEPATH
     else
-      out, err = TextMate::Process.run(TM_GOIMPORTS_BINARY, args, :input => input)
+      cmd << {:input => input}
     end
     
-    return out, err
+    return TextMate::Process.run(*cmd)
   end
 
   def gofumpt(options={})
     input = options[:input]
-    args = options[:args]
+    args = options[:args] || []
+    cmd = [TM_GOFUMPT_BINARY, args]
 
     if input.nil?
-      out, err = TextMate::Process.run(TM_GOFUMPT_BINARY, args, TM_FILEPATH)
+      cmd << TM_FILEPATH
     else
-      out, err = TextMate::Process.run(TM_GOFUMPT_BINARY, args, :input => input)
+      cmd << {:input => input}
     end
+
+    return TextMate::Process.run(*cmd)
+  end
+
+  def golines(options={})
+    input = options[:input]
+    args = options[:args] || []
+    args.concat(['-m', TM_GOLINES_MAX_LEN, '-t', TM_GOLINES_TAB_LEN])
+    args.concat(['--shorten-comments']) if TM_GOLINES_SHORTEN_COMMENTS
     
-    return out, err
+    cmd = [TM_GOLINES_BINARY, args]
+
+    if input.nil?
+      cmd << TM_FILEPATH
+    else
+      cmd << {:input => input}
+    end
+
+    return TextMate::Process.run(*cmd)
   end
   
 end
