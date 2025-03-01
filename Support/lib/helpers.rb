@@ -119,17 +119,24 @@ module Helpers
     return sprintf("%0#{padding}d", line_number)
   end
   
-  def boxify_errors(errors)
+  def boxify_errors(errors, line_count)
     messages = []
+    go_to_errors = []
+
     messages << "⚠️ Found #{errors.size} #{pluralize(errors.size, "error")}! ⚠️\n"
     messages << "🔍 Use Option ( ⌥ ) + G to jump error line!"
     
     errors.each do |error_line, errs|
       errs.sort_by{|err| err[:line_number]}.each do |err|
         messages << "  - #{err[:line_number]} -> #{err[:message]}"
+        
+        fmt_ln = pad_number(line_count, err[:line_number])
+        fmt_cn = pad_number(line_count, err[:column_number])
+        go_to_errors << "#{fmt_ln}:#{fmt_cn} | #{err[:message]}"
       end
     end
     
+    create_storage(go_to_errors, true) if go_to_errors
     messages.join("\n")
   end
   

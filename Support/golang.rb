@@ -1,3 +1,5 @@
+require ENV['TM_SUPPORT_PATH'] + '/lib/ui'
+
 require ENV['TM_BUNDLE_SUPPORT'] + '/lib/constants'
 require ENV['TM_BUNDLE_SUPPORT'] + '/lib/logger'
 require ENV['TM_BUNDLE_SUPPORT'] + '/lib/linter'
@@ -26,7 +28,8 @@ module Golang
     end
     
     required_bins = []
-    required_bins << 'goimports' unless ENV['TM_GOLANG_DISABLE_GOIMPORTS']
+    required_bins << 'goimports' unless TM_GOLANG_DISABLE_GOIMPORTS
+    required_bins << 'gofumpt' unless TM_GOLANG_DISABLE_GOFUMPT
     required_bins.each do |name|
       exit_boxify_tool_tip("you need to install \"#{name}\" binary") unless !`command -v #{name} > /dev/null 2>&1 && echo $?`.chomp.empty?
     end
@@ -43,6 +46,8 @@ module Golang
   def run_document_will_save(options={})
     reset_markers
     destroy_storage
+    destroy_storage(true)
+
     exit_discard unless enabled?
     check_bunle_requirements
 
@@ -55,35 +60,27 @@ module Golang
     
     will_save_errors = []
     
-    unless ENV['TM_GOLANG_DISABLE_GOIMPORTS']
+    unless TM_GOLANG_DISABLE_GOIMPORTS
       out, err = Linter.goimports :input => @document
-      # logger.info "out: #{out.inspect} -- err: #{err.inspect}"
 
       if err.empty?
         @document = out
       else
         logger.error "goimports err, #{err.inspect}"
         will_save_errors.concat(err.split("\n").map { |line| "(goimports):" + line })
-        # logger.error "will_save_errors, #{will_save_errors.inspect}"
-        # will_save_errors << "(goimports):#{err}"
       end
     end
-    
+
+    unless TM_GOLANG_DISABLE_GOFUMPT
+      out, _ = Linter.gofumpt :input => @document
+      @document = out
+    end
+
+
     unless will_save_errors.empty?
       create_storage(will_save_errors)
     end
     
-    # unless ENV['TM_GOLANG_DISABLE_GOFUMPT']
-    #   out, err = Linter.gofumpt :input => @document
-    #   logger.info "out: #{out.inspect} -- err: #{err.inspect}"
-    #
-    #   if err.empty?
-    #     @document = out
-    #   else
-    #     logger.error "goimports err, #{err.inspect}" unless err.empty?
-    #     create_storage([err])
-    #   end
-    # end
     
     print @document
   end
@@ -101,16 +98,45 @@ module Golang
     if storage_errs
       logger.error "storage_err: #{storage_errs.inspect}"
 
+      lines_count = @document.split("\n").size
       errors = organize_errors(storage_errs)
       set_markers("error", errors)
-      exit_boxify_tool_tip(boxify_errors(errors))
+      exit_boxify_tool_tip(boxify_errors(errors, lines_count))
     end
     
-    success_message = []
-    success_message << "🎉 congrats! \"#{TM_FILENAME}\" has zero errors 👍\n"
-    success_message << "✅ [goimports]" unless ENV['TM_GOLANG_DISABLE_GOIMPORTS']
+    enabled_checkers = [
+      !TM_GOLANG_DISABLE_GOIMPORTS,
+      !TM_GOLANG_DISABLE_GOFUMPT,
+    ]
     
+    logger.info "enabled_checkers: #{enabled_checkers.inspect}"
+    
+    success_message = []
+    if enabled_checkers.any?
+      success_message << "🎉 congrats! \"#{TM_FILENAME}\" has zero errors 👍\n"
+      success_message << "✅ [goimports]" unless TM_GOLANG_DISABLE_GOIMPORTS
+      success_message << "✅ [gofumpt] - #{TM_GOFUMPT_BINARY_VERSION}" unless TM_GOLANG_DISABLE_GOFUMPT
+    else
+      success_message << "☢️ Heads up! nothing is checked, you have disabled all ☢️"
+    end
+
     exit_boxify_tool_tip(success_message.join("\n"))
   end
   
+  def goto_error
+    if File.exist?(Storage::GOTO_FILE)
+      goto_errors = File.read(Storage::GOTO_FILE)
+      if goto_errors
+        goto_errors = goto_errors.split("\n").sort
+        selected_index = TextMate::UI.menu(goto_errors)
+        unless selected_index.nil?
+          selected_error = goto_errors[selected_index]
+          if selected_error
+            line = selected_error.split(" ").first
+            system(ENV["TM_MATE"], "--uuid", TM_DOCUMENT_UUID, "--line", line)
+          end
+        end
+      end
+    end
+  end
 end

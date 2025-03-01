@@ -55,18 +55,41 @@ defaults write com.macromates.TextMate NSToolTipsFontSize 24
 You need to install go related tools, all are optional:
 
 - `goimports`: `go install golang.org/x/tools/cmd/goimports@latest`
+- `gofumpt`: `go install mvdan.cc/gofumpt@latest`
+
+You can set custom executables for each tool with using `TM_` variables from 
+`TextMate > Settings > Variables`:
+
+    TM_GOIMPORTS_BINARY /path/to/goimports
+    TM_GOFUMPT_BINARY   /path/to/gofumpt
+
+or from `.tm_properties`:
+
+    TM_GOIMPORTS_BINARY=/path/to/goimports
+    TM_GOFUMPT_BINARY=/path/to/gofumpt
+
+or with `defaults` command:
+
+```bash
+defaults write com.macromates.TextMate environmentVariables \
+    -array-add "{enabled = 1; value = \"/path/to/goimports\"; name = \"TM_GOIMPORTS_BINARY\"; }"
+
+defaults write com.macromates.TextMate environmentVariables \
+    -array-add "{enabled = 1; value = \"/path/to/gofumpt\"; name = \"TM_GOFUMPT_BINARY\"; }"
+```
 
 ---
 
 ## TODO
 
 - [X] `goimports`
-- [ ] `gofumpt`
+- [X] `gofumpt`
 - [ ] `golines`
 - [ ] `shadow`
 - [ ] `staticcheck`
 - [ ] `golangci-lint`
 - [ ] `gopls` LSP
+- [X] Go to error line
 - [ ] Lots of snippets
 - [ ] Go tools updater script
 
@@ -81,6 +104,9 @@ You need to install go related tools, all are optional:
 | `TM_GOPATH` |  | Your `GOPATH` from `go env GOPATH` (e.g: `/Users/vigo/.local/go` find the value via `go env GOPATH` )  |
 | `TM_GOLANG_DISABLE` |  | Disable bundle |
 | `TM_GOLANG_DISABLE_GOIMPORTS` |  | Disable `goimports` |
+| `TM_GOLANG_DISABLE_GOFUMPT` |  | Disable `gofumpt` |
+| `TM_GOIMPORTS_BINARY` | | Optional |
+| `TM_GOFUMPT_BINARY` | | Optional |
 
 To set your TextMate variables, go to `TextMate > Settings > Variables` and
 set the values. Some variables only need to have any value assigned in order
@@ -88,18 +114,17 @@ to be activated. Such as:
 
     TM_GOLANG_DISABLE           1
     TM_GOLANG_DISABLE_GOIMPORTS 1
-
----
-
-## Toggle Features
-
-@wip
+    TM_GOLANG_DISABLE_GOFUMPT   1
+    TM_GOIMPORTS_BINARY         /path/to/goimports
+    TM_GOFUMPT_BINARY           /path/to/gofumpt
 
 ---
 
 ## Hot Keys and Snippets
 
-@wip
+| Hot Keys and TAB Completions | Description |
+|:-----|:-----|
+| <kbd>⌥</kbd> + <kbd>G</kbd> | Go to error marked line/column. <small>(option + G)</small> |
 
 ---
 
@@ -110,8 +135,6 @@ to be activated. Such as:
 ---
 
 ## Change Log
-
-@wip
 
 You can read the whole story [here][changelog].
 

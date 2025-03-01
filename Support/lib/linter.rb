@@ -17,12 +17,24 @@ module Linter
   def goimports(options={})
     input = options[:input]
     args = options[:args]
-    cmd = `command -v goimports`.chomp
 
     if input.nil?
-      out, err = TextMate::Process.run(cmd, args, TM_FILEPATH)
+      out, err = TextMate::Process.run(TM_GOIMPORTS_BINARY, args, TM_FILEPATH)
     else
-      out, err = TextMate::Process.run(cmd, args, :input => input)
+      out, err = TextMate::Process.run(TM_GOIMPORTS_BINARY, args, :input => input)
+    end
+    
+    return out, err
+  end
+
+  def gofumpt(options={})
+    input = options[:input]
+    args = options[:args]
+
+    if input.nil?
+      out, err = TextMate::Process.run(TM_GOFUMPT_BINARY, args, TM_FILEPATH)
+    else
+      out, err = TextMate::Process.run(TM_GOFUMPT_BINARY, args, :input => input)
     end
     
     return out, err
