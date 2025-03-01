@@ -134,6 +134,18 @@ module Golang
       end
     end
 
+    unless TM_GOLANG_DISABLE_GOVET
+      _, err = Linter.govet_shadow
+      logger.error "govet_shadow: #{err.inspect}"
+      unless err.empty?
+        logger.error "govet err, #{err.inspect}"
+        did_save_errors.concat(
+          err.split("\n").
+            reject { |line| line.index("#") == 0 }.
+            map { |line| "(govet):" + line })
+      end
+    end
+
     if did_save_errors.size > 0
       logger.error "did_save_errors: #{did_save_errors.inspect}"
       errors = organize_errors(did_save_errors)

@@ -57,6 +57,7 @@ You need to install go related tools, all are optional:
 - `goimports`: `go install golang.org/x/tools/cmd/goimports@latest`
 - `gofumpt`: `go install mvdan.cc/gofumpt@latest`
 - `golines`: `go install github.com/segmentio/golines@latest`
+- `shadow`: `go install golang.org/x/tools/go/analysis/passes/shadow/cmd/shadow@latest`
 
 You can set custom executables for each tool with using `TM_` variables from 
 `TextMate > Settings > Variables`:
@@ -64,12 +65,14 @@ You can set custom executables for each tool with using `TM_` variables from
     TM_GOIMPORTS_BINARY /path/to/goimports
     TM_GOFUMPT_BINARY   /path/to/gofumpt
     TM_GOLINES_BINARY   /path/to/golines
+    TM_GOSHADOW_BINARY   /path/to/shadow
 
 or from `.tm_properties`:
 
     TM_GOIMPORTS_BINARY=/path/to/goimports
     TM_GOFUMPT_BINARY=/path/to/gofumpt
     TM_GOLINES_BINARY=/path/to/golines
+    TM_GOSHADOW_BINARY=/path/to/shadow
 
 or with `defaults` command:
 
@@ -82,6 +85,9 @@ defaults write com.macromates.TextMate environmentVariables \
 
 defaults write com.macromates.TextMate environmentVariables \
     -array-add "{enabled = 1; value = \"/path/to/golines\"; name = \"TM_GOLINES_BINARY\"; }"
+
+defaults write com.macromates.TextMate environmentVariables \
+    -array-add "{enabled = 1; value = \"/path/to/shadow\"; name = \"TM_GOSHADOW_BINARY\"; }"
 ```
 
 ---
@@ -92,7 +98,7 @@ defaults write com.macromates.TextMate environmentVariables \
 - [X] `gofumpt`
 - [X] `golines`
 - [X] `go vet`
-- [ ] `shadow`
+- [X] `shadow`
 - [ ] `fieldalignment`
 - [ ] `staticcheck`
 - [ ] `golangci-lint`
@@ -115,9 +121,11 @@ defaults write com.macromates.TextMate environmentVariables \
 | `TM_GOLANG_DISABLE_GOFUMPT` |  | Disable `gofumpt` |
 | `TM_GOLANG_DISABLE_GOLINES` |  | Disable `golines` |
 | `TM_GOLANG_DISABLE_GOVET` |  | Disable `go vet` |
+| `TM_GOLANG_DISABLE_GOSHADOW` |  | Disable `go vet` with `shadow` |
 | `TM_GOIMPORTS_BINARY` | | Optional |
 | `TM_GOFUMPT_BINARY` | | Optional |
 | `TM_GOLINES_BINARY` | | Optional |
+| `TM_GOSHADOW_BINARY` | | Optional |
 | `TM_GOLINES_MAX_LEN` | `"100"` | Maximum line length |
 | `TM_GOLINES_TAB_LEN` | `"4"` | Length of TAB |
 | `TM_GOLINES_SHORTEN_COMMENTS` | | Shorten comments too! |
@@ -131,9 +139,11 @@ to be activated. Such as:
     TM_GOLANG_DISABLE_GOFUMPT   1
     TM_GOLANG_DISABLE_GOLINES   1
     TM_GOLANG_DISABLE_GOVET     1
+    TM_GOLANG_DISABLE_GOSHADOW  1
     TM_GOIMPORTS_BINARY         /path/to/goimports
     TM_GOFUMPT_BINARY           /path/to/gofumpt
     TM_GOLINES_BINARY           /path/to/golines
+    TM_GOSHADOW_BINARY          /path/to/shadow
     TM_GOLINES_MAX_LEN          120
     TM_GOLINES_TAB_LEN          2
 ---
