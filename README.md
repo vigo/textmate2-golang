@@ -367,6 +367,9 @@ All PR’s are welcome!
 1. `push` your `branch` (`git push origin my-features`)
 1. Than create a new **Pull Request**!
 
+This project is intended to be a safe, welcoming space for collaboration, and
+contributors are expected to adhere to the [code of conduct][coc].
+
 ---
 
 ## License
@@ -378,3 +381,4 @@ This project is licensed under MIT
 [textmate2]: https://github.com/textmate/textmate
 [golang]: https://go.dev/
 [changelog]: https://github.com/vigo/textmate2-golang/blob/main/CHANGELOG.md
+[coc]: https://github.com/vigo/textmate2-golang/blob/main/CODE_OF_CONDUCT.md
