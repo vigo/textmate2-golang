@@ -91,7 +91,9 @@ defaults write com.macromates.TextMate environmentVariables \
 - [X] `goimports`
 - [X] `gofumpt`
 - [X] `golines`
+- [X] `go vet`
 - [ ] `shadow`
+- [ ] `fieldalignment`
 - [ ] `staticcheck`
 - [ ] `golangci-lint`
 - [ ] `gopls` LSP
@@ -112,6 +114,7 @@ defaults write com.macromates.TextMate environmentVariables \
 | `TM_GOLANG_DISABLE_GOIMPORTS` |  | Disable `goimports` |
 | `TM_GOLANG_DISABLE_GOFUMPT` |  | Disable `gofumpt` |
 | `TM_GOLANG_DISABLE_GOLINES` |  | Disable `golines` |
+| `TM_GOLANG_DISABLE_GOVET` |  | Disable `go vet` |
 | `TM_GOIMPORTS_BINARY` | | Optional |
 | `TM_GOFUMPT_BINARY` | | Optional |
 | `TM_GOLINES_BINARY` | | Optional |
@@ -127,6 +130,7 @@ to be activated. Such as:
     TM_GOLANG_DISABLE_GOIMPORTS 1
     TM_GOLANG_DISABLE_GOFUMPT   1
     TM_GOLANG_DISABLE_GOLINES   1
+    TM_GOLANG_DISABLE_GOVET     1
     TM_GOIMPORTS_BINARY         /path/to/goimports
     TM_GOFUMPT_BINARY           /path/to/gofumpt
     TM_GOLINES_BINARY           /path/to/golines

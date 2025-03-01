@@ -61,8 +61,15 @@ module Golang
     will_save_errors = []
     
     unless TM_GOLANG_DISABLE_GOFUMPT
-      out, _ = Linter.gofumpt :input => @document
-      @document = out
+      out, err = Linter.gofumpt :input => @document
+
+      if err.empty?
+        @document = out
+      else
+        logger.error "gofumpt err, #{err.inspect}"
+        will_save_errors.concat(err.split("\n").map { |line| "(gofumpt):" + line })
+      end
+
     end
 
     unless TM_GOLANG_DISABLE_GOIMPORTS
@@ -78,8 +85,6 @@ module Golang
 
     unless TM_GOLANG_DISABLE_GOLINES
       out, err = Linter.golines :input => @document
-      logger.warn "golines, out: #{out} -- err: #{err}"
-      
       if err.empty?
         @document = out
       else
@@ -91,8 +96,7 @@ module Golang
     unless will_save_errors.empty?
       create_storage(will_save_errors)
     end
-    
-    
+
     print @document
   end
   
@@ -101,7 +105,8 @@ module Golang
     check_bunle_requirements
 
     @document = STDIN.read
-    
+    lines_count = @document.split("\n").size    
+
     exit_discard if document_empty?
     exit_discard if document_has_first_line_comment?
 
@@ -109,8 +114,29 @@ module Golang
     if storage_errs
       logger.error "storage_err: #{storage_errs.inspect}"
 
-      lines_count = @document.split("\n").size
       errors = organize_errors(storage_errs)
+      set_markers("error", errors)
+      exit_boxify_tool_tip(boxify_errors(errors, lines_count))
+    end
+    
+    logger.info "did save"
+    
+    did_save_errors = []
+    
+    unless TM_GOLANG_DISABLE_GOVET
+      _, err = Linter.govet
+      unless err.empty?
+        logger.error "govet err, #{err.inspect}"
+        did_save_errors.concat(
+          err.split("\n").
+            reject { |line| line.index("#") == 0 }.
+            map { |line| "(govet):" + line })
+      end
+    end
+
+    if did_save_errors.size > 0
+      logger.error "did_save_errors: #{did_save_errors.inspect}"
+      errors = organize_errors(did_save_errors)
       set_markers("error", errors)
       exit_boxify_tool_tip(boxify_errors(errors, lines_count))
     end
@@ -119,6 +145,7 @@ module Golang
       !TM_GOLANG_DISABLE_GOIMPORTS,
       !TM_GOLANG_DISABLE_GOFUMPT,
       !TM_GOLANG_DISABLE_GOLINES,
+      !TM_GOLANG_DISABLE_GOVET,
     ]
     logger.info "enabled_checkers: #{enabled_checkers.inspect}"
     
@@ -128,6 +155,7 @@ module Golang
       success_message << "✅ [goimports]" unless TM_GOLANG_DISABLE_GOIMPORTS
       success_message << "✅ [gofumpt] - #{TM_GOFUMPT_BINARY_VERSION}" unless TM_GOLANG_DISABLE_GOFUMPT
       success_message << "✅ [golines]" unless TM_GOLANG_DISABLE_GOLINES
+      success_message << "✅ [go vet]" unless TM_GOLANG_DISABLE_GOVET
     else
       success_message << "☢️ Heads up! nothing is checked, you have disabled all ☢️"
     end

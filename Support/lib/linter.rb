@@ -59,4 +59,21 @@ module Linter
     return TextMate::Process.run(*cmd)
   end
   
+  def govet(options={})
+    args = options[:args] || []
+    
+    go_mod = "#{TM_PROJECT_DIRECTORY}/go.mod"
+    go_work = "#{TM_PROJECT_DIRECTORY}/go.work"
+    relative_path = TM_FILEPATH.gsub(/^#{Regexp.escape(TM_PROJECT_DIRECTORY)}/, '')
+    
+    lookup = File.exists?(go_mod) ? './...' : TM_FILENAME
+    if File.exists?(go_work)
+      matched_module = match_need_go_module(relative_path)
+      lookup = "./#{matched_module}/..." unless matched_module.nil?
+    end
+    
+    args.concat(['vet', lookup])
+    return TextMate::Process.run(ENV['TM_GO'], args, :chdir => TM_PROJECT_DIRECTORY)
+  end
+
 end

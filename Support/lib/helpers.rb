@@ -123,7 +123,10 @@ module Helpers
     messages = []
     go_to_errors = []
 
-    messages << "⚠️ Found #{errors.size} #{pluralize(errors.size, "error")}! ⚠️\n"
+    errors_size = errors.values.map { |arr| arr.size }.inject(0) { |sum, count| sum + count }
+    
+
+    messages << "⚠️ Found #{errors_size} #{pluralize(errors_size, "error")}! ⚠️\n"
     messages << "🔍 Use Option ( ⌥ ) + G to jump error line!"
     
     errors.each do |error_line, errs|
@@ -144,10 +147,10 @@ module Helpers
     errs = {}
 
     errors.each do |error|
-      if error =~ /^\((.*)\):(.*):(\d+):(\d+):\s?(.*)$/
+      case error
+      when /^\((.*)\):(.*):(\d+):(\d+):\s?(.*)$/
         error_type, file, line_number, column_number, message = $1, $2, $3.to_i, $4.to_i, $5
         errs[line_number] = [] unless errs.has_key?(line_number)
-
         err = {
           :line_number => line_number,
           :column_number => column_number,
@@ -155,9 +158,55 @@ module Helpers
           :message => "[#{error_type}]: #{message}",
         }
         errs[line_number] << err
+      when /^\((.*)\):(.*):(\d+):(\d+):\s?(.*)$/
+        error_type, file, line_number, column_number, message = $1, $2, $3.to_i, $4.to_i, $5
+        errs[line_number] = [] unless errs.has_key?(line_number)
+        err = {
+          :line_number => line_number,
+          :column_number => column_number,
+          :type => error_type,
+          :message => "[#{error_type}]: #{message}",
+        }
+        errs[line_number] << err
+      else
+        errs[0] = [] unless errs.has_key?(0)
+        err = {
+          :line_number => 0,
+          :column_number => 0,
+          :type => "???",
+          :message => error.chomp,
+        }
+        errs[0] << err
       end
+      # if error =~ /^\((.*)\):(.*):(\d+):(\d+):\s?(.*)$/
+      #   error_type, file, line_number, column_number, message = $1, $2, $3.to_i, $4.to_i, $5
+      #   errs[line_number] = [] unless errs.has_key?(line_number)
+      #
+      #   err = {
+      #     :line_number => line_number,
+      #     :column_number => column_number,
+      #     :type => error_type,
+      #     :message => "[#{error_type}]: #{message}",
+      #   }
+      #   errs[line_number] << err
+      # end
     end
     
     errs
   end
+  
+  def match_need_go_module(relative_path)
+    args = [ENV['TM_GO'], 'list', '-f', '{{.Path}}', '-m']
+    modules, _ = TextMate::Process.run(args, :chdir => TM_PROJECT_DIRECTORY)
+
+    matched_module = nil
+    modules.split.each do |module_name|
+      if relative_path.include?(module_name)
+        matched_module = module_name
+        break
+      end
+    end
+    matched_module
+  end
+  
 end
