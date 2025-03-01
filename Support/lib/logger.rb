@@ -5,7 +5,16 @@ module Logging
 
   LOG_FILE = '/tmp/textmate-golang.log'
   LOG_PROGNAME = 'TM-GOLANG'
-  LOG_LEVEL = Logger::DEBUG
+
+  LOG_LEVEL = case (ENV['LOG_LEVEL'] || 'DEBUG').upcase
+              when 'DEBUG' then Logger::DEBUG
+              when 'INFO' then Logger::INFO
+              when 'WARN' then Logger::WARN
+              when 'ERROR' then Logger::ERROR
+              when 'FATAL' then Logger::FATAL
+              else Logger::DEBUG
+              end
+  
   LOG_DATETIME_FORMAT = '%Y-%m-%d %H:%M:%S'
 
   ROTATION_TIME = 1200 # (20 minutes * 60 seconds = 1200 seconds)

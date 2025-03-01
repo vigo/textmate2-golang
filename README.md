@@ -5,6 +5,8 @@
 If you’re still using [TextMate 2][textmate2] in 2025 and developing with
 [Go][golang], this TextMate bundle will be a game-changer for you! 🚀
 
+![Demo](Screens/demo.gif)
+
 ---
 
 ## Installation
@@ -12,7 +14,7 @@ If you’re still using [TextMate 2][textmate2] in 2025 and developing with
 You need `go` installation:
 
 ```bash
-brew install go
+brew install go golangci-lint
 ```
 
 Check if your `go` installation is ok?
@@ -59,6 +61,7 @@ You need to install go related tools, all are optional:
 - `golines`: Breaks long lines even long comments.
 - `shadow`: Checks variable shadowing.
 - `fieldalignment`: Auto fixes struct field alignments.
+- `golangci-lint`: Fastest linter for Go!
 
 ```bash
 go install golang.org/x/tools/cmd/goimports@latest
@@ -73,6 +76,16 @@ You can install tools according to your feature toggles with using
 
 ---
 
+## Usage
+
+Open your go projects and hit **Save**
+
+![Success](Screens/success.png)
+
+![Errors](Screens/errors.png)
+
+---
+
 ## TODO
 
 - [X] `goimports`
@@ -81,7 +94,7 @@ You can install tools according to your feature toggles with using
 - [X] `go vet`
 - [X] `shadow`
 - [X] `fieldalignment`
-- [ ] `golangci-lint`
+- [X] `golangci-lint`
 - [ ] `gopls` LSP
 - [X] Go to error line
 - [ ] Lots of snippets
@@ -93,24 +106,31 @@ You can install tools according to your feature toggles with using
 
 | Variable | Default Value | Description |
 |:---------|:--------------|:------------|
-| `ENABLE_LOGGING` |  | Set this for bundle development purposes |
+| `ENABLE_LOGGING` |  | Set this for bundle development purposes. |
+| `LOG_LEVEL` | `"DEBUG"` | Set this for bundle development purposes. |
+| `TM_GOLANG_TOOLTIP_LINE_LENGTH` | `"100"` | Length of tool tip window |
+| `TM_GOLANG_TOOLTIP_LEFT_PADDING` | `"2"` | Left char padding of tool tip window |
+| `TM_GOLANG_TOOLTIP_BORDER_CHAR` | `"-"` | Line char of tool tip window |
 | `TM_GO` |  | Path to your `go` binary (e.g: `/opt/homebrew/opt/go/libexec/bin/go` )  |
 | `TM_GOPATH` |  | Your `GOPATH` from `go env GOPATH` (e.g: `/Users/vigo/.local/go` find the value via `go env GOPATH` )  |
 | `TM_GOLANG_DISABLE` |  | Disable bundle |
-| `TM_GOLANG_DISABLE_GOIMPORTS` |  | Disable `goimports` |
-| `TM_GOLANG_DISABLE_GOFUMPT` |  | Disable `gofumpt` |
-| `TM_GOLANG_DISABLE_GOLINES` |  | Disable `golines` |
-| `TM_GOLANG_DISABLE_GOVET` |  | Disable `go vet` |
-| `TM_GOLANG_DISABLE_GOSHADOW` |  | Disable `go vet` with `shadow` |
-| `TM_GOLANG_DISABLE_FIELDALIGNMENT` |  | Disable `fieldalignment` |
-| `TM_GOIMPORTS_BINARY` | | Optional |
-| `TM_GOFUMPT_BINARY` | | Optional |
-| `TM_GOLINES_BINARY` | | Optional |
-| `TM_GOSHADOW_BINARY` | | Optional |
-| `TM_GOFIELDALIGNMENT_BINARY` | | Optional |
-| `TM_GOLINES_MAX_LEN` | `"100"` | Maximum line length |
-| `TM_GOLINES_TAB_LEN` | `"4"` | Length of TAB |
-| `TM_GOLINES_SHORTEN_COMMENTS` | | Shorten comments too! |
+| `TM_GOLANG_DISABLE_GOIMPORTS` |  | Disable `goimports` auto fixes. |
+| `TM_GOLANG_DISABLE_GOFUMPT` |  | Disable `gofumpt` checks. |
+| `TM_GOLANG_DISABLE_GOLINES` |  | Disable `golines` fixes. |
+| `TM_GOLANG_DISABLE_GOVET` |  | Disable `go vet` checks. |
+| `TM_GOLANG_DISABLE_GOSHADOW` |  | Disable `go vet` with `shadow` checks. |
+| `TM_GOLANG_DISABLE_FIELDALIGNMENT` |  | Disable `fieldalignment` auto fixes. |
+| `TM_GOLANG_DISABLE_GOLANGCI_LINTER` |  | Disable `golangci-lint` checks. |
+| `TM_GOIMPORTS_BINARY` | | Optional, set if you have different installation. |
+| `TM_GOFUMPT_BINARY` | | Optional, set if you have different installation. |
+| `TM_GOLINES_BINARY` | | Optional, set if you have different installation. |
+| `TM_GOSHADOW_BINARY` | | Optional, set if you have different installation. |
+| `TM_GOLANGCI_LINTER_BINARY` | | Optional, set if you have different installation. |
+| `TM_GOFIELDALIGNMENT_BINARY` | | Optional, set if you have different installation. |
+| `TM_GOLINES_MAX_LEN` | `"100"` | Maximum line length for `golines` |
+| `TM_GOLINES_TAB_LEN` | `"4"` | Length of TAB for `golines` |
+| `TM_GOLINES_SHORTEN_COMMENTS` | | Enable shorten comments too! |
+| `GOLANGCI_LINTER_OPTIONS` | | By pass linter config file, disable all and use only given options. |
 
 To set your TextMate variables, go to `TextMate > Settings > Variables` and
 set the values. Some variables only need to have any value assigned in order
@@ -128,6 +148,7 @@ to be activated. Such as:
     TM_GOLINES_BINARY                   /path/to/golines
     TM_GOSHADOW_BINARY                  /path/to/shadow
     TM_GOFIELDALIGNMENT_BINARY          /path/to/fieldalignment
+    TM_GOLANGCI_LINTER_BINARY           /path/to/golangci-lint
     TM_GOLINES_MAX_LEN                  120
     TM_GOLINES_TAB_LEN                  2
     TM_GOLINES_SHORTEN_COMMENTS         1
@@ -139,25 +160,31 @@ or from `.tm_properties` (local or global)
 
 To set/toggle features from `.tm_properties`:
 
+    # development only
+    ENABLE_LOGGING=1
+    LOG_LEVEL=DEBUG         # possible values are
+                            # DEBUG, INFO, WARN, ERROR, FATAL
     # disable feature(s)
-    TM_GOLANG_DISABLE_GOIMPORTS=1
-    TM_GOLANG_DISABLE_GOFUMPT=1
-    TM_GOLANG_DISABLE_GOLINES=1
-    TM_GOLANG_DISABLE_GOVET=1
-    TM_GOLANG_DISABLE_GOSHADOW=1
-    TM_GOLANG_DISABLE_FIELDALIGNMENT=1
+    # TM_GOLANG_DISABLE_GOIMPORTS=1
+    # TM_GOLANG_DISABLE_GOFUMPT=1
+    # TM_GOLANG_DISABLE_GOLINES=1
+    # TM_GOLANG_DISABLE_GOVET=1
+    # TM_GOLANG_DISABLE_GOSHADOW=1
+    # TM_GOLANG_DISABLE_FIELDALIGNMENT=1
+    # TM_GOLANG_DISABLE_GOLANGCI_LINTER=1
     
     # custom params
-    TM_GOLINES_MAX_LEN=120
-    TM_GOLINES_TAB_LEN=2
-    TM_GOLINES_SHORTEN_COMMENTS=1
+    # TM_GOLINES_MAX_LEN=120
+    # TM_GOLINES_TAB_LEN=2
+    # TM_GOLINES_SHORTEN_COMMENTS=1
     
     # if you have custom binaries to set
-    TM_GOIMPORTS_BINARY=/path/to/goimports
-    TM_GOFUMPT_BINARY=/path/to/gofumpt
-    TM_GOLINES_BINARY=/path/to/golines
-    TM_GOSHADOW_BINARY=/path/to/shadow
-    TM_GOFIELDALIGNMENT_BINARY=/path/to/fieldalignment
+    # TM_GOIMPORTS_BINARY=/path/to/goimports
+    # TM_GOFUMPT_BINARY=/path/to/gofumpt
+    # TM_GOLINES_BINARY=/path/to/golines
+    # TM_GOSHADOW_BINARY=/path/to/shadow
+    # TM_GOFIELDALIGNMENT_BINARY=/path/to/fieldalignment
+    # TM_GOLANGCI_LINTER_BINARY=/path/to/golangci-lint
 
 or with `defaults` command:
 
@@ -165,6 +192,14 @@ or with `defaults` command:
 # disable bundle! nothing will work...
 defaults write com.macromates.TextMate environmentVariables \
     -array-add "{enabled = 1; value = \"1\"; name = \"TM_GOLANG_DISABLE\"; }"
+
+# example: enable logging
+defaults write com.macromates.TextMate environmentVariables \
+    -array-add "{enabled = 1; value = \"1\"; name = \"ENABLE_LOGGING\"; }"
+
+# example: set log level
+defaults write com.macromates.TextMate environmentVariables \
+    -array-add "{enabled = 1; value = \"ERROR\"; name = \"LOG_LEVEL\"; }"
 
 # disable goimports
 defaults write com.macromates.TextMate environmentVariables \
@@ -190,6 +225,10 @@ defaults write com.macromates.TextMate environmentVariables \
 defaults write com.macromates.TextMate environmentVariables \
     -array-add "{enabled = 1; value = \"1\"; name = \"TM_GOLANG_DISABLE_FIELDALIGNMENT\"; }"
 
+# disable golangci-lint
+defaults write com.macromates.TextMate environmentVariables \
+    -array-add "{enabled = 1; value = \"1\"; name = \"TM_GOLANG_DISABLE_GOLANGCI_LINTER\"; }"
+
 # set golines max line length
 defaults write com.macromates.TextMate environmentVariables \
     -array-add "{enabled = 1; value = \"120\"; name = \"TM_GOLINES_MAX_LEN\"; }"
@@ -201,6 +240,11 @@ defaults write com.macromates.TextMate environmentVariables \
 # enable golines for comments too!
 defaults write com.macromates.TextMate environmentVariables \
     -array-add "{enabled = 1; value = \"1\"; name = \"TM_GOLINES_SHORTEN_COMMENTS\"; }"
+
+# example: disable all golangci-lint checkers and use given options,
+# only check: errcheck and gosimple errors.
+defaults write com.macromates.TextMate environmentVariables \
+    -array-add "{enabled = 1; value = \"-E errcheck -E gosimple\"; name = \"GOLANGCI_LINTER_OPTIONS\"; }"
 
 # set custom path for goimports
 defaults write com.macromates.TextMate environmentVariables \
@@ -221,6 +265,10 @@ defaults write com.macromates.TextMate environmentVariables \
 # set custom path for fieldalignment
 defaults write com.macromates.TextMate environmentVariables \
     -array-add "{enabled = 1; value = \"/path/to/fieldalignment\"; name = \"TM_GOFIELDALIGNMENT_BINARY\"; }"
+
+# set custom path for golangci-lint
+defaults write com.macromates.TextMate environmentVariables \
+    -array-add "{enabled = 1; value = \"/path/to/golangci-lint\"; name = \"TM_GOLANGCI_LINTER_BINARY\"; }"
 ```
 
 ---

@@ -66,8 +66,9 @@ module Golang
       if err.empty?
         @document = out
       else
-        logger.error "gofumpt err, #{err.inspect}"
-        will_save_errors.concat(err.split("\n").map { |line| "(gofumpt):" + line })
+        formated_err = err.split("\n").map { |line| "(gofumpt):" + line }
+        logger.error "gofumpt - formated_err: #{formated_err.inspect}"
+        will_save_errors.concat(formated_err)
       end
 
     end
@@ -78,8 +79,9 @@ module Golang
       if err.empty?
         @document = out
       else
-        logger.error "goimports err, #{err.inspect}"
-        will_save_errors.concat(err.split("\n").map { |line| "(goimports):" + line })
+        formated_err = err.split("\n").map { |line| "(goimports):" + line }
+        logger.error "goimports - formated_err: #{formated_err.inspect}"
+        will_save_errors.concat(formated_err)
       end
     end
 
@@ -88,15 +90,16 @@ module Golang
       if err.empty?
         @document = out
       else
-        logger.error "golines err, #{err.inspect}"
-        will_save_errors.concat(err.split("\n").map { |line| "(golines):" + line })
+        formated_err = err.split("\n").map { |line| "(golines):" + line }
+        logger.error "golines - formated_err: #{formated_err.inspect}"
+        will_save_errors.concat(formated_err)
       end
     end
     
     unless TM_GOLANG_DISABLE_FIELDALIGNMENT
       out, err = Linter.autofix_fieldalignment :input => @document
       unless err.empty?
-        logger.warn "fieldalignment issues fixed: #{err}"
+        logger.error "autofix_fieldalignment - fixed: #{err}"
         @document = out
       end
     end
@@ -113,15 +116,13 @@ module Golang
     check_bunle_requirements
 
     @document = STDIN.read
-    lines_count = @document.split("\n").size    
+    lines_count = @document.split("\n").size
 
     exit_discard if document_empty?
     exit_discard if document_has_first_line_comment?
 
     storage_errs = get_storage
     if storage_errs
-      logger.error "storage_err: #{storage_errs.inspect}"
-
       errors = organize_errors(storage_errs)
       set_markers("error", errors)
       exit_boxify_tool_tip(boxify_errors(errors, lines_count))
@@ -134,36 +135,37 @@ module Golang
     unless TM_GOLANG_DISABLE_GOVET
       _, err = Linter.govet
       unless err.empty?
-        logger.error "govet err, #{err.inspect}"
-        did_save_errors.concat(
-          err.split("\n").
+        formated_err = err.split("\n").
             reject { |line| line.index("#") == 0 }.
-            map { |line| "(govet):" + line })
+            map { |line| "(govet):" + line }
+        logger.error "govet - formated_err: #{formated_err.inspect}"
+        did_save_errors.concat(formated_err)
       end
     end
 
     unless TM_GOLANG_DISABLE_GOSHADOW
       _, err = Linter.govet_shadow
       unless err.empty?
-        logger.error "govet_shadow err, #{err.inspect}"
-        did_save_errors.concat(
-          err.split("\n").
+        formated_err = err.split("\n").
             reject { |line| line.index("#") == 0 }.
-            map { |line| "(govetshadow):" + line })
+            map { |line| "(govetshadow):" + line }
+        logger.error "govet_shadow - formated_err: #{formated_err.inspect}"
+        did_save_errors.concat(formated_err)
       end
     end
-    
-    # unless TM_GOLANG_DISABLE_FIELDALIGNMENT
-    #   out, err = Linter.autofix_fieldalignment
-    #   unless err.empty?
-    #     logger.info "autofix_fieldalignment: err: -- #{err}"
-    #     system()
-    #   end
-    # end
-    
+
+    unless TM_GOLANG_DISABLE_GOLANGCI_LINTER
+      out, err = Linter.golangci_lint
+      unless out.empty?
+        formated_out = out.split("\n").
+          select { |line| line =~ /^\S+:\d+:\d+:/ }.
+          map{ |line| "(golangci):" + line }
+        logger.error "golangci_lint - formated_err: #{formated_err.inspect}"
+        did_save_errors.concat(formated_out)
+      end
+    end
 
     if did_save_errors.size > 0
-      logger.error "did_save_errors: #{did_save_errors.inspect}"
       errors = organize_errors(did_save_errors)
       set_markers("error", errors)
       exit_boxify_tool_tip(boxify_errors(errors, lines_count))
@@ -175,8 +177,8 @@ module Golang
       !TM_GOLANG_DISABLE_GOLINES,
       !TM_GOLANG_DISABLE_GOVET,
       !TM_GOLANG_DISABLE_FIELDALIGNMENT,
+      !TM_GOLANG_DISABLE_GOLANGCI_LINTER,
     ]
-    logger.info "enabled_checkers: #{enabled_checkers.inspect}"
     
     success_message = []
     if enabled_checkers.any?
@@ -186,6 +188,8 @@ module Golang
       success_message << "✅ [golines]" unless TM_GOLANG_DISABLE_GOLINES
       success_message << "✅ [go vet]" unless TM_GOLANG_DISABLE_GOVET
       success_message << "✅ [fieldalignment]" unless TM_GOLANG_DISABLE_FIELDALIGNMENT
+      success_message << "✅ [golangci-lint] - " unless TM_GOLANG_DISABLE_GOLANGCI_LINTER
+      success_message << "ℹ️ [go version] - #{TM_GO_BINARY_VERSION}"
     else
       success_message << "☢️ Heads up! nothing is checked, you have disabled all ☢️"
     end

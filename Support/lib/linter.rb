@@ -91,6 +91,17 @@ module Linter
     lookup
   end
   
+  def has_golangci_lint_config_file?
+    has_config_file = false
+    ['yml', 'yaml', 'toml', 'json'].each do |ext|
+      if File.exists?("#{TM_PROJECT_DIRECTORY}/.golangci.#{ext}")
+        has_config_file = true
+        break
+      end
+    end
+    has_config_file
+  end
+  
   def govet(options={})
     args = options[:args] || []
     args.concat(['vet', get_lookup])
@@ -104,10 +115,13 @@ module Linter
     return TextMate::Process.run(ENV['TM_GO'], args, :chdir => TM_PROJECT_DIRECTORY)
   end
 
-  # def autofix_fieldalignment(options={})
-  #   args = options[:args] || []
-  #   args.concat(['-fix', TM_FILEPATH])
-  #   return TextMate::Process.run(TM_GOFIELDALIGNMENT_BINARY, args, :chdir => TM_PROJECT_DIRECTORY)
-  # end
+  def golangci_lint(options={})
+    args = options[:args] || []
+    args.concat(['run'])
+    args.concat(['--color', 'never'])
+    args.concat(['--disable-all'] + GOLANGCI_LINTER_OPTIONS.split(' ')) if !has_golangci_lint_config_file? && GOLANGCI_LINTER_OPTIONS
+    logger.info "golangci_lint args: #{args.inspect}"
+    return TextMate::Process.run(TM_GOLANGCI_LINTER_BINARY, args, :chdir => TM_PROJECT_DIRECTORY)
+  end
 
 end

@@ -10,6 +10,16 @@
     exit
 fi
 
+if [[ -z "${TM_GO+x}" ]]; then
+    echo "you need to set TM_GO environment variable"
+    exit
+fi
+
+if [[ -z "${TM_GOPATH+x}" ]]; then
+    echo "you need to set TM_GOPATH environment variable"
+    exit
+fi
+
 installed_count=0
 
 if [[ -z "${TM_GOLANG_DISABLE_GOIMPORTS+x}" ]]; then
