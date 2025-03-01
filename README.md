@@ -30,7 +30,15 @@ $ go version
 go version go1.24.0 darwin/arm64
 ```
 
-You need to set `TM_GO` and `TM_GOPATH` TextMate variables:
+Now clone this repo:
+
+```bash
+cd ~/Library/Application\ Support/TextMate/Bundles/
+git clone git@github.com:vigo/textmate2-golang.git TextMate2-Golang.tmbundle
+```
+
+Now restart TextMate. You need to set `TM_GO` and `TM_GOPATH` TextMate
+variables:
 
 ```bash
 defaults write com.macromates.TextMate environmentVariables \
