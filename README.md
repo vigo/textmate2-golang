@@ -288,6 +288,7 @@ defaults write com.macromates.TextMate environmentVariables \
 | <kbd>⌥</kbd> + <kbd>I</kbd> | Install go tools. <small>(option + I)</small> |
 | <kbd>⌥</kbd> + <kbd>G</kbd> | Go to error marked line/column. <small>(option + G)</small> |
 | <kbd>⌥</kbd> + <kbd>R</kbd> | Fix imports, formatting w/o saving file. <small>(option + R)</small> |
+| <kbd>⌥</kbd> + <kbd>C</kbd> | Create `.golangci.yml` file under project root. <small>(option + C)</small> |
 
 ### Snippets
 

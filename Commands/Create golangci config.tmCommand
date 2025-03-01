@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>command</key>
+	<string>#!/usr/bin/env ruby18 -wKU
+
+golangci_file = '.golangci.yml'
+source_file = "#{ENV['TM_BUNDLE_SUPPORT']}/#{golangci_file}"
+target_file = "#{ENV['TM_PROJECT_DIRECTORY']}/#{golangci_file}"
+
+puts "----------------------------------------------"
+unless File.exists? target_file
+  sf = File.open(source_file)
+  config_content = sf.read
+  sf.close
+
+  tf = File.open(target_file, 'w')
+  tf.puts(config_content)
+  tf.close
+  puts "  .golangci.yml created at:  \n\n"
+  puts "  #{target_file}  "
+else
+  puts "  config file is already exists!\n\n"
+  puts "  #{target_file}  \n\n"
+  puts "  please remove the config file first!"
+end
+puts "----------------------------------------------"
+</string>
+	<key>input</key>
+	<string>none</string>
+	<key>keyEquivalent</key>
+	<string>~c</string>
+	<key>name</key>
+	<string>Create golangci config</string>
+	<key>outputCaret</key>
+	<string>interpolateByChar</string>
+	<key>outputLocation</key>
+	<string>toolTip</string>
+	<key>uuid</key>
+	<string>052B5BBB-4C16-44D2-ABC7-E5228665A211</string>
+</dict>
+</plist>

@@ -3,6 +3,7 @@
 **2025-03-02**
 
 - Add some snippets
+- Add `.golangci.yml` creation command
 
 **2025-03-01**
 
