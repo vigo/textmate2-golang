@@ -37,8 +37,10 @@ cd ~/Library/Application\ Support/TextMate/Bundles/
 git clone git@github.com:vigo/textmate2-golang.git TextMate2-Golang.tmbundle
 ```
 
-Now restart TextMate. You need to set `TM_GO` and `TM_GOPATH` TextMate
-variables:
+After clone, the bundle should normally appear in the pull-down menu,
+meaning the installation is complete. If it doesn’t appear, restart TextMate.
+
+You need to set `TM_GO` and `TM_GOPATH` TextMate variables:
 
 ```bash
 defaults write com.macromates.TextMate environmentVariables \
@@ -122,6 +124,7 @@ Open your go projects and hit **Save**
 |:---------|:--------------|:------------|
 | `ENABLE_LOGGING` |  | Set this for bundle development purposes. |
 | `LOG_LEVEL` | `"DEBUG"` | Set this for bundle development purposes. |
+| `TM_GOLANG_HIDE_TOOL_INFO_ON_SUCCESS` | | Toggle tool information on success message. |
 | `TM_GOLANG_TOOLTIP_LINE_LENGTH` | `"100"` | Length of tool tip window |
 | `TM_GOLANG_TOOLTIP_LEFT_PADDING` | `"2"` | Left char padding of tool tip window |
 | `TM_GOLANG_TOOLTIP_BORDER_CHAR` | `"-"` | Line char of tool tip window |

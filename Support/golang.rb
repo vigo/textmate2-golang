@@ -183,13 +183,15 @@ module Golang
     success_message = []
     if enabled_checkers.any?
       success_message << "🎉 congrats! \"#{TM_FILENAME}\" has zero errors 👍\n"
-      success_message << "✅ [goimports]" unless TM_GOLANG_DISABLE_GOIMPORTS
-      success_message << "✅ [gofumpt] - #{TM_GOFUMPT_BINARY_VERSION}" unless TM_GOLANG_DISABLE_GOFUMPT
-      success_message << "✅ [golines]" unless TM_GOLANG_DISABLE_GOLINES
-      success_message << "✅ [go vet]" unless TM_GOLANG_DISABLE_GOVET
-      success_message << "✅ [fieldalignment]" unless TM_GOLANG_DISABLE_FIELDALIGNMENT
-      success_message << "✅ [golangci-lint] - #{TM_GOLANGCI_LINTER_BINARY_VERSION}" unless TM_GOLANG_DISABLE_GOLANGCI_LINTER
-      success_message << "ℹ️ [go version] - #{TM_GO_BINARY_VERSION}"
+      unless TM_GOLANG_HIDE_TOOL_INFO_ON_SUCCESS
+        success_message << "✅ [goimports]" unless TM_GOLANG_DISABLE_GOIMPORTS
+        success_message << "✅ [gofumpt] - #{TM_GOFUMPT_BINARY_VERSION}" unless TM_GOLANG_DISABLE_GOFUMPT
+        success_message << "✅ [golines]" unless TM_GOLANG_DISABLE_GOLINES
+        success_message << "✅ [go vet]" unless TM_GOLANG_DISABLE_GOVET
+        success_message << "✅ [fieldalignment]" unless TM_GOLANG_DISABLE_FIELDALIGNMENT
+        success_message << "✅ [golangci-lint] - #{TM_GOLANGCI_LINTER_BINARY_VERSION}" unless TM_GOLANG_DISABLE_GOLANGCI_LINTER
+        success_message << "ℹ️ [go version] - #{TM_GO_BINARY_VERSION}"
+      end
     else
       success_message << "☢️ Heads up! nothing is checked, you have disabled all ☢️"
     end

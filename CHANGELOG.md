@@ -1,5 +1,10 @@
 # Change Log
 
+**2025-03-03**
+
+- Add `TM_GOLANG_HIDE_TOOL_INFO_ON_SUCCESS` env-var check to toggle tool
+  information on success message.
+
 **2025-03-02**
 
 - Add some snippets
