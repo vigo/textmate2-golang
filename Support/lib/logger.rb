@@ -70,9 +70,10 @@ module Logging
         logger.progname = LOG_PROGNAME
         logger.datetime_format = LOG_DATETIME_FORMAT
         
+        caller_info_index = RUBY_VERSION > "1.8.7" ? 4 : 5
         logger.formatter = proc do |severity, time, progname, msg|
           color_code = Logging.severity_color(severity)
-          caller_info = caller(5).first
+          caller_info = caller(caller_info_index).first
           method_name = caller_info.match(/`([^']*)'/) ? caller_info.match(/`([^']*)'/)[1] : 'unknown'
           formatted_time = time.strftime(logger.datetime_format)
           file_path = File.basename(caller_info.split(':').first)

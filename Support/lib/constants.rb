@@ -18,6 +18,7 @@ module Constants
   TM_FILENAME = ENV['TM_FILENAME']
   TM_FILEPATH = ENV['TM_FILEPATH']
   TM_DOCUMENT_UUID = ENV['TM_DOCUMENT_UUID']
+  TM_CURRENT_WORD = ENV['TM_CURRENT_WORD']
 
   TOOLTIP_LINE_LENGTH = ENV['TM_GOLANG_TOOLTIP_LINE_LENGTH'] || '100'
   TOOLTIP_LEFT_PADDING = ENV['TM_GOLANG_TOOLTIP_LEFT_PADDING'] || '2'
@@ -40,4 +41,6 @@ module Constants
   TM_GOLANGCI_LINTER_BINARY_VERSION = `#{TM_GOLANGCI_LINTER_BINARY} version | /usr/bin/grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | xargs | cut -d' ' -f1`.chomp
 
   TM_GO_BINARY_VERSION = `#{ENV['TM_GO']} version | grep -oE 'go[0-9]+\.[0-9]+\.[0-9]+'`.chomp
+  
+  ENABLE_LOGGING = ENV['ENABLE_LOGGING']
 end
