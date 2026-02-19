@@ -78,9 +78,9 @@ module Linter
   end
   
   def get_lookup()
-    go_mod = "#{TM_PROJECT_DIRECTORY}/go.mod"
-    go_work = "#{TM_PROJECT_DIRECTORY}/go.work"
-    relative_path = TM_FILEPATH.gsub(/^#{Regexp.escape(TM_PROJECT_DIRECTORY)}/, '')
+    go_mod = "#{TM_GO_PROJECT_ROOT}/go.mod"
+    go_work = "#{TM_GO_PROJECT_ROOT}/go.work"
+    relative_path = TM_FILEPATH.gsub(/^#{Regexp.escape(TM_GO_PROJECT_ROOT)}/, '')
 
     lookup = File.exists?(go_mod) ? './...' : TM_FILENAME
     if File.exists?(go_work)
@@ -94,7 +94,7 @@ module Linter
   def has_golangci_lint_config_file?
     has_config_file = false
     ['yml', 'yaml', 'toml', 'json'].each do |ext|
-      if File.exists?("#{TM_PROJECT_DIRECTORY}/.golangci.#{ext}")
+      if File.exists?("#{TM_GO_PROJECT_ROOT}/.golangci.#{ext}")
         has_config_file = true
         break
       end
@@ -105,14 +105,14 @@ module Linter
   def govet(options={})
     args = options[:args] || []
     args.concat(['vet', get_lookup])
-    return TextMate::Process.run(ENV['TM_GO'], args, :chdir => TM_PROJECT_DIRECTORY)
+    return TextMate::Process.run(ENV['TM_GO'], args, :chdir => TM_GO_PROJECT_ROOT)
   end
 
   def govet_shadow(options={})
     args = options[:args] || []
 
     args.concat(['vet', '-vettool', TM_GOSHADOW_BINARY, get_lookup])
-    return TextMate::Process.run(ENV['TM_GO'], args, :chdir => TM_PROJECT_DIRECTORY)
+    return TextMate::Process.run(ENV['TM_GO'], args, :chdir => TM_GO_PROJECT_ROOT)
   end
 
   def golangci_lint(options={})
@@ -121,7 +121,7 @@ module Linter
     args.concat(['--color', 'never'])
     args.concat(['--disable-all'] + GOLANGCI_LINTER_OPTIONS.split(' ')) if !has_golangci_lint_config_file? && GOLANGCI_LINTER_OPTIONS
     logger.info "golangci_lint args: #{args.inspect}"
-    return TextMate::Process.run(TM_GOLANGCI_LINTER_BINARY, args, :chdir => TM_PROJECT_DIRECTORY)
+    return TextMate::Process.run(TM_GOLANGCI_LINTER_BINARY, args, :chdir => TM_GO_PROJECT_ROOT)
   end
 
 end

@@ -96,6 +96,30 @@ You can install tools according to your feature toggles with using
 
 Open your go projects and hit **Save**
 
+### Monorepo / Sub-directory Support
+
+If your `go.mod` is not in the project root (e.g. in a monorepo), set the
+`TM_GO_PROJECT_ROOT` variable in your project's `.tm_properties` file:
+
+    TM_GO_PROJECT_ROOT=backend
+
+For a project structure like this:
+
+    .
+    ├── backend
+    │   ├── go.mod
+    │   ├── main.go
+    │   └── ...
+    ├── frontend
+    │   └── ...
+    └── .tm_properties
+
+The bundle will look for `go.mod`, run `go vet`, `golangci-lint`, and all
+other tools from the `backend/` directory instead of the project root.
+
+If `TM_GO_PROJECT_ROOT` is not set, the bundle uses `TM_PROJECT_DIRECTORY`
+as before (backward compatible).
+
 ![Success](Screens/success.png)
 
 ![Errors](Screens/errors.png)
@@ -128,6 +152,7 @@ Open your go projects and hit **Save**
 | `TM_GOLANG_TOOLTIP_LINE_LENGTH` | `"100"` | Length of tool tip window |
 | `TM_GOLANG_TOOLTIP_LEFT_PADDING` | `"2"` | Left char padding of tool tip window |
 | `TM_GOLANG_TOOLTIP_BORDER_CHAR` | `"-"` | Line char of tool tip window |
+| `TM_GO_PROJECT_ROOT` | | Relative path to Go project root from `TM_PROJECT_DIRECTORY`. Useful for monorepos. |
 | `TM_GO` |  | Path to your `go` binary (e.g: `/opt/homebrew/opt/go/libexec/bin/go` )  |
 | `TM_GOPATH` |  | Your `GOPATH` from `go env GOPATH` (e.g: `/Users/vigo/.local/go` find the value via `go env GOPATH` )  |
 | `TM_GOLANG_DISABLE` |  | Disable bundle |
@@ -190,6 +215,9 @@ To set/toggle features from `.tm_properties`:
     # TM_GOLANG_DISABLE_FIELDALIGNMENT=1
     # TM_GOLANG_DISABLE_GOLANGCI_LINTER=1
     
+    # set go project root for monorepo support
+    # TM_GO_PROJECT_ROOT=backend
+
     # custom params
     # TM_GOLINES_MAX_LEN=120
     # TM_GOLINES_TAB_LEN=2

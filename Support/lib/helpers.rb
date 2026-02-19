@@ -215,7 +215,7 @@ module Helpers
   
   def match_need_go_module(relative_path)
     args = [ENV['TM_GO'], 'list', '-f', '{{.Path}}', '-m']
-    modules, _ = TextMate::Process.run(args, :chdir => TM_PROJECT_DIRECTORY)
+    modules, _ = TextMate::Process.run(args, :chdir => TM_GO_PROJECT_ROOT)
 
     matched_module = nil
     modules.split.each do |module_name|
