@@ -7,7 +7,12 @@
 
 golangci_file = '.golangci.yml'
 source_file = "#{ENV['TM_BUNDLE_SUPPORT']}/#{golangci_file}"
-target_file = "#{ENV['TM_PROJECT_DIRECTORY']}/#{golangci_file}"
+go_project_root = if ENV['TM_GO_PROJECT_ROOT']
+  File.expand_path(ENV['TM_GO_PROJECT_ROOT'], ENV['TM_PROJECT_DIRECTORY'])
+else
+  ENV['TM_PROJECT_DIRECTORY']
+end
+target_file = "#{go_project_root}/#{golangci_file}"
 
 puts "----------------------------------------------"
 unless File.exists? target_file

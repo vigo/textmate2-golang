@@ -1,5 +1,11 @@
 # Change Log
 
+**2026-02-19**
+
+- Add `TM_GO_PROJECT_ROOT` env-var for monorepo / sub-directory support.
+  When `go.mod` is not in the project root, set this variable to the relative
+  path of the Go project directory (e.g. `backend`).
+
 **2025-03-03**
 
 - Add `TM_GOLANG_HIDE_TOOL_INFO_ON_SUCCESS` env-var check to toggle tool
