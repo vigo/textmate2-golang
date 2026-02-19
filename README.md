@@ -173,6 +173,7 @@ as before (backward compatible).
 | `TM_GOLINES_TAB_LEN` | `"4"` | Length of TAB for `golines` |
 | `TM_GOLINES_SHORTEN_COMMENTS` | | Enable shorten comments too! |
 | `GOLANGCI_LINTER_OPTIONS` | | By pass linter config file, disable all and use only given options. |
+| `TM_GO_PROJECT_ROOT` | | Set the go project directory if it’s needed. |
 
 To set your TextMate variables, go to `TextMate > Settings > Variables` and
 set the values. Some variables only need to have any value assigned in order
