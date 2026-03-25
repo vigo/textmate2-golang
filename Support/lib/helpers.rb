@@ -56,7 +56,7 @@ module Helpers
       
       errors.each do |data|
         if data.has_key?(:file)
-          if TM_FILEPATH =~ /#{data[:file]}$/
+          if TM_FILEPATH =~ /#{Regexp.escape(data[:file])}$/
             messages << "#{data[:message]}"
           end
         end
@@ -148,7 +148,7 @@ module Helpers
         
         other_filename = ''
         if err.has_key?(:file)
-          if TM_FILEPATH =~ /#{err[:file]}$/
+          if TM_FILEPATH =~ /#{Regexp.escape(err[:file])}$/
             go_to_errors << "#{fmt_ln}:#{fmt_cn} | #{err[:message]}"
           else
             any_external_file_error = true
