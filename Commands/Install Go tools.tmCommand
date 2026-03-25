@@ -5,7 +5,10 @@
 	<key>beforeRunningCommand</key>
 	<string>nop</string>
 	<key>command</key>
-	<string>if [[ "${TM_GOLANG_DISABLE+x}" ]]; then
+	<string>#!/bin/bash
+[[ -f "${TM_SUPPORT_PATH}/lib/bash_init.sh" ]] &amp;&amp; . "${TM_SUPPORT_PATH}/lib/bash_init.sh"
+
+if [[ "${TM_GOLANG_DISABLE+x}" ]]; then
     echo "bundle is disabled, exitting..."
     exit
 fi
@@ -35,7 +38,7 @@ if [[ -z "${TM_GOLANG_DISABLE_GOFUMPT+x}" ]]; then
 fi
 
 if [[ -z "${TM_GOLANG_DISABLE_GOLINES+x}" ]]; then
-    go install github.com/segmentio/golines@latest &amp;&amp;
+    go install github.com/golangci/golines@latest &amp;&amp;
     echo "✅ golines" &amp;&amp;
     installed_count=$(( installed_count+1 ))
 fi

@@ -82,7 +82,7 @@ You need to install go related tools, all are optional:
 ```bash
 go install golang.org/x/tools/cmd/goimports@latest
 go install mvdan.cc/gofumpt@latest
-go install github.com/segmentio/golines@latest
+go install github.com/golangci/golines@latest
 go install golang.org/x/tools/go/analysis/passes/shadow/cmd/shadow@latest
 go install golang.org/x/tools/go/analysis/passes/fieldalignment/cmd/fieldalignment@latest
 ```

@@ -1,5 +1,10 @@
 # Change Log
 
+**2026-03-25**
+
+- Fix ruby regex issues
+- use `github.com/golangci/golines@latest` instead of old one.
+
 **2026-02-19**
 
 - Add `TM_GO_PROJECT_ROOT` env-var for monorepo / sub-directory support.
