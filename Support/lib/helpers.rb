@@ -56,7 +56,7 @@ module Helpers
       
       errors.each do |data|
         if data.has_key?(:file)
-          if TM_FILEPATH =~ /#{data[:file]}$/
+          if TM_FILEPATH =~ /#{Regexp.escape(data[:file])}$/
             messages << "#{data[:message]}"
           end
         end
@@ -148,7 +148,7 @@ module Helpers
         
         other_filename = ''
         if err.has_key?(:file)
-          if TM_FILEPATH =~ /#{err[:file]}$/
+          if TM_FILEPATH =~ /#{Regexp.escape(err[:file])}$/
             go_to_errors << "#{fmt_ln}:#{fmt_cn} | #{err[:message]}"
           else
             any_external_file_error = true
@@ -176,23 +176,12 @@ module Helpers
     errors.each do |error|
       logger.info "original error: #{error.inspect}"
       case error
-      when /^\((.*)\):(.*):(\d+):(\d+):\s?(.*)$/
+      when /^\((.*?)\):(.*?):(\d+):(\d+):\s?(.*)$/
         error_type, file, line_number, column_number, message = $1, $2, $3.to_i, $4.to_i, $5
         logger.fatal "error_type: #{error_type} - file: #{file}"
         errs[line_number] = [] unless errs.has_key?(line_number)
         err = {
-          :file => file.sub(/^(vet|shadow): ?\.\//, ''),
-          :line_number => line_number,
-          :column_number => column_number,
-          :type => error_type,
-          :message => "[#{error_type}]: #{message}",
-        }
-        errs[line_number] << err
-      when /^\((.*)\):(.*):(\d+):(\d+):\s?(.*)$/
-        error_type, file, line_number, column_number, message = $1, $2, $3.to_i, $4.to_i, $5
-        errs[line_number] = [] unless errs.has_key?(line_number)
-        err = {
-          :file => file.sub(/^\.\//, ''),
+          :file => file.sub(/^(vet|shadow): ?\.\//, '').sub(/^\.\//, ''),
           :line_number => line_number,
           :column_number => column_number,
           :type => error_type,
