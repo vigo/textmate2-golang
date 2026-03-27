@@ -88,6 +88,7 @@ module Linter
       lookup = "./#{matched_module}/..." unless matched_module.nil?
     end
 
+    logger.info "lookup: #{lookup}"
     lookup
   end
   

@@ -53,10 +53,15 @@ module Helpers
   def set_markers(mark, errors_list)
     errors_list.each do |line_number, errors|
       messages = []
-      
+      logger.info "line_number: #{line_number}, #{errors.inspect}"
       errors.each do |data|
         if data.has_key?(:file)
-          if TM_FILEPATH =~ /#{Regexp.escape(data[:file])}$/
+          splited_file_key = data[:file].split(' ')
+          file_key_index = splited_file_key.length > 1 ? 1 : 0
+          need_match_filename = splited_file_key[file_key_index]
+          # if TM_FILEPATH =~ /#{Regexp.escape(data[:file])}$/
+          # if TM_FILEPATH =~ /#{data[:file]}$/
+          if TM_FILEPATH =~ /#{need_match_filename}$/
             messages << "#{data[:message]}"
           end
         end
@@ -148,7 +153,11 @@ module Helpers
         
         other_filename = ''
         if err.has_key?(:file)
-          if TM_FILEPATH =~ /#{Regexp.escape(err[:file])}$/
+          splited_file_key = err[:file].split(' ')
+          file_key_index = splited_file_key.length > 1 ? 1 : 0
+          need_match_filename = splited_file_key[file_key_index]
+          
+          if TM_FILEPATH =~ /#{need_match_filename}$/
             go_to_errors << "#{fmt_ln}:#{fmt_cn} | #{err[:message]}"
           else
             any_external_file_error = true
